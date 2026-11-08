@@ -1,0 +1,832 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bank Cybersecurity Audit Checklist — BINF 711</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Sans+Arabic:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f4f6f9; --surface:#ffffff; --ink:#14213d; --muted:#5b667a; --line:#dde3ec;
+  --brand:#1d3557; --brand-ink:#ffffff; --accent:#2a6f97;
+  --high:#9b1c1c; --high-bg:#fdecec; --med:#8a5a00; --med-bg:#fff4dc; --low:#276749; --low-bg:#e6f4ec;
+  --ok:#1f7a4d; --ok-bg:#e3f5ec; --gap:#b42318; --gap-bg:#fdeceb;
+  --shadow:0 1px 2px rgba(20,33,61,.06),0 4px 14px rgba(20,33,61,.05);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"IBM Plex Sans","IBM Plex Sans Arabic",system-ui,-apple-system,"Segoe UI",sans-serif;line-height:1.55;font-size:15px}
+html[lang=ar] body{font-family:"IBM Plex Sans Arabic","IBM Plex Sans",system-ui,sans-serif;font-size:16px}
+button,input,select,textarea{font:inherit;color:inherit}
+.wrap{max-width:1080px;margin:0 auto;padding:0 20px}
+header.top{background:var(--brand);color:var(--brand-ink);padding:22px 0 18px}
+.top h1{margin:0 0 4px;font-size:22px;font-weight:600;letter-spacing:.1px}
+.top .sub{margin:0;opacity:.85;font-size:13.5px}
+.top .row{display:flex;gap:16px;align-items:flex-start;justify-content:space-between;flex-wrap:wrap}
+.lang{display:inline-flex;border:1px solid rgba(255,255,255,.45);border-radius:8px;overflow:hidden}
+.lang button{background:transparent;color:#fff;border:0;padding:6px 14px;cursor:pointer;font-size:14px}
+.lang button[aria-pressed=true]{background:#fff;color:var(--brand);font-weight:600}
+.lang button:focus-visible,.tab:focus-visible,.btn:focus-visible,.stbtn:focus-visible,summary:focus-visible,.chip:focus-visible{outline:3px solid #ffb703;outline-offset:2px}
+.progress{margin-top:16px;display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:10px}
+.stat{background:rgba(255,255,255,.1);border-radius:10px;padding:8px 12px}
+.stat b{display:block;font-size:20px;font-weight:600}
+.stat span{font-size:12px;opacity:.85}
+.bar{height:8px;background:rgba(255,255,255,.25);border-radius:6px;margin-top:12px;overflow:hidden}
+.bar i{display:block;height:100%;background:#7ddba7;width:0;transition:width .25s}
+nav.tabs{background:var(--surface);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:20}
+nav.tabs .wrap{display:flex;gap:4px;overflow-x:auto}
+.tab{background:none;border:0;padding:12px 16px;cursor:pointer;font-weight:500;color:var(--muted);border-bottom:3px solid transparent;white-space:nowrap}
+.tab[aria-selected=true]{color:var(--brand);border-bottom-color:var(--accent)}
+.filters{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin:18px 0 6px}
+.filters input[type=search],.filters select{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:8px 10px;min-width:140px}
+.filters input[type=search]{flex:1;min-width:200px}
+.switch{display:inline-flex;gap:8px;align-items:center;cursor:pointer;user-select:none;font-size:14px}
+.switch input{width:18px;height:18px;accent-color:var(--accent)}
+.count{color:var(--muted);font-size:13px;margin:4px 0 12px}
+.domain{margin:26px 0 8px}
+.domain h2{margin:0;font-size:18px;font-weight:600;color:var(--brand)}
+.domain p{margin:2px 0 10px;color:var(--muted);font-size:13.5px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:12px;box-shadow:var(--shadow);margin:0 0 12px;overflow:hidden;border-inline-start:5px solid var(--line)}
+.card.r-High{border-inline-start-color:var(--high)} .card.r-Medium{border-inline-start-color:#c68a00} .card.r-Low{border-inline-start-color:var(--low)}
+.card.done{border-inline-start-color:var(--ok);background:#fbfefc}
+.card.gap{border-inline-start-color:var(--gap)}
+.card summary{list-style:none;cursor:pointer;padding:14px 16px;display:grid;grid-template-columns:auto 1fr auto;gap:10px 14px;align-items:start}
+.card summary::-webkit-details-marker{display:none}
+.cid{font-family:"IBM Plex Mono",monospace;font-size:12.5px;font-weight:500;background:#eaf0f7;color:var(--brand);border-radius:6px;padding:3px 7px;margin-top:2px}
+.tl{font-weight:500}
+.badges{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}
+.badge{font-size:12px;padding:2px 8px;border-radius:999px;font-weight:500;white-space:nowrap}
+.b-High{background:var(--high-bg);color:var(--high)} .b-Medium{background:var(--med-bg);color:var(--med)} .b-Low{background:var(--low-bg);color:var(--low)}
+.b-urg{background:#e8eef7;color:#26446b}
+.b-own{background:#f1f3f6;color:var(--muted)}
+.st{font-size:12px;font-weight:600;padding:3px 9px;border-radius:8px;white-space:nowrap}
+.st-todo{background:#eef1f5;color:var(--muted)} .st-ok{background:var(--ok-bg);color:var(--ok)} .st-gap{background:var(--gap-bg);color:var(--gap)}
+.body{padding:2px 18px 18px;border-top:1px dashed var(--line)}
+.lbl{font-size:12px;text-transform:uppercase;letter-spacing:.6px;color:var(--muted);font-weight:600;margin:14px 0 4px}
+html[lang=ar] .lbl{letter-spacing:0;font-size:13px}
+.q{font-size:15.5px;font-weight:500;background:#f6f9fd;border-radius:8px;padding:10px 12px;border-inline-start:3px solid var(--accent)}
+.body ul{margin:4px 0 0;padding-inline-start:20px}
+.body li{margin:3px 0}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{direction:ltr;unicode-bidi:isolate;border:1px solid #c7d4e6;background:#f2f6fb;color:var(--brand);border-radius:8px;padding:3px 9px;font-size:12.5px;cursor:pointer;font-family:"IBM Plex Mono",monospace}
+.chip:hover{background:#e3edf8;border-color:var(--accent)}
+.chip b{font-family:"IBM Plex Sans",sans-serif;font-weight:600}
+.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px;align-items:center}
+.stbtn{border:1.5px solid var(--line);background:#fff;border-radius:8px;padding:7px 14px;cursor:pointer;font-weight:500}
+.stbtn[aria-pressed=true].s-ok{background:var(--ok);border-color:var(--ok);color:#fff}
+.stbtn[aria-pressed=true].s-gap{background:var(--gap);border-color:var(--gap);color:#fff}
+.stbtn[aria-pressed=true].s-todo{background:#5b667a;border-color:#5b667a;color:#fff}
+textarea.note{width:100%;margin-top:10px;border:1px solid var(--line);border-radius:8px;padding:8px 10px;min-height:56px;resize:vertical;background:#fcfdfe}
+.empty{text-align:center;color:var(--muted);padding:40px 10px}
+.btn{background:var(--brand);color:#fff;border:0;border-radius:8px;padding:8px 14px;cursor:pointer;font-weight:500}
+.btn.sec{background:#fff;color:var(--brand);border:1.5px solid var(--brand)}
+table.rep{width:100%;border-collapse:collapse;background:var(--surface);border-radius:12px;overflow:hidden;box-shadow:var(--shadow)}
+.rep th,.rep td{padding:10px 12px;text-align:start;vertical-align:top;border-bottom:1px solid var(--line);font-size:14px}
+.rep th{background:#eaf0f7;color:var(--brand);font-size:12.5px;text-transform:uppercase;letter-spacing:.5px}
+html[lang=ar] .rep th{text-transform:none;letter-spacing:0;font-size:13.5px}
+.rep .rk{font-weight:600;font-family:"IBM Plex Mono",monospace}
+.rep ul{margin:0;padding-inline-start:18px}
+.rep-tools{display:flex;gap:8px;flex-wrap:wrap;margin:16px 0}
+.method{background:#fff;border:1px solid var(--line);border-radius:10px;padding:12px 14px;font-size:13.5px;color:var(--muted);margin:10px 0 16px}
+.modal-bg{position:fixed;inset:0;background:rgba(10,20,40,.55);display:none;align-items:center;justify-content:center;z-index:50;padding:16px}
+.modal-bg.open{display:flex}
+.modal{background:#fff;border-radius:14px;max-width:560px;width:100%;padding:22px;box-shadow:0 20px 60px rgba(0,0,0,.3);max-height:90vh;overflow:auto}
+.modal h3{margin:0 0 2px;font-size:18px}
+.modal .ctl{font-family:"IBM Plex Mono",monospace;direction:ltr;unicode-bidi:isolate;font-size:14px;color:var(--accent);margin-bottom:10px}
+.modal .req{background:#f6f9fd;border-radius:8px;padding:10px 12px;margin:8px 0;direction:ltr;text-align:left}
+.modal .nt{font-size:13px;color:var(--muted)}
+.modal a{color:var(--accent);font-weight:500;direction:ltr;unicode-bidi:isolate;display:inline-block}
+.modal .warn{background:var(--med-bg);color:var(--med);border-radius:8px;padding:8px 10px;font-size:13px;margin-top:10px}
+#tip{position:fixed;z-index:60;pointer-events:none;background:#14213d;color:#fff;font-size:12.5px;padding:6px 10px;border-radius:8px;max-width:300px;display:none;direction:ltr;text-align:left;box-shadow:0 6px 20px rgba(0,0,0,.25)}
+footer{color:var(--muted);font-size:12.5px;padding:30px 0 50px}
+.hide{display:none!important}
+@media (max-width:640px){.card summary{grid-template-columns:auto 1fr}.card summary .st{grid-column:1/-1;justify-self:start}.rep{font-size:13px}.rep th:nth-child(5),.rep td:nth-child(5){display:none}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <div class="row">
+      <div>
+        <h1 id="t-title"></h1>
+        <p class="sub" id="t-client"></p>
+        <p class="sub" id="t-course"></p>
+      </div>
+      <div class="lang" role="group" aria-label="Language / اللغة">
+        <button id="l-en" aria-pressed="true">English</button>
+        <button id="l-ar" aria-pressed="false">العربية</button>
+      </div>
+    </div>
+    <div class="progress" id="progress"></div>
+    <div class="bar" aria-hidden="true"><i id="barfill"></i></div>
+  </div>
+</header>
+<nav class="tabs"><div class="wrap" role="tablist">
+  <button class="tab" role="tab" id="tab-list" aria-selected="true"></button>
+  <button class="tab" role="tab" id="tab-rep" aria-selected="false"></button>
+  <button class="tab" role="tab" id="tab-about" aria-selected="false"></button>
+</div></nav>
+
+<main class="wrap">
+  <section id="v-list">
+    <div class="filters">
+      <input type="search" id="f-q" aria-label="Search">
+      <select id="f-d" aria-label="Domain"></select>
+      <select id="f-r" aria-label="Risk"></select>
+      <select id="f-s" aria-label="Status"></select>
+      <label class="switch"><input type="checkbox" id="f-hide" checked><span id="t-hide"></span></label>
+    </div>
+    <div class="count" id="count" aria-live="polite"></div>
+    <div id="list"></div>
+  </section>
+
+  <section id="v-rep" class="hide">
+    <h2 id="t-rep-h" style="margin:22px 0 4px;font-size:20px"></h2>
+    <p id="t-rep-p" style="margin:0;color:var(--muted)"></p>
+    <div class="method" id="t-method"></div>
+    <div class="rep-tools">
+      <label class="switch"><input type="checkbox" id="r-gaps"><span id="t-gaps"></span></label>
+      <button class="btn" id="b-copy"></button>
+      <button class="btn sec" id="b-csv"></button>
+      <span id="copied" style="color:var(--ok);font-weight:500"></span>
+    </div>
+    <div id="rep-out"></div>
+  </section>
+
+  <section id="v-about" class="hide"></section>
+  <footer id="t-foot"></footer>
+</main>
+
+<div class="modal-bg" id="modal" role="dialog" aria-modal="true" aria-labelledby="m-title">
+  <div class="modal" id="modal-in"></div>
+</div>
+<div id="tip" role="tooltip"></div>
+
+<script>
+/* Cybersecurity Audit Checklist — retail/commercial bank. Data file. */
+window.DATA = {
+  client: { en: "Client: Delta Commercial Bank (fictional) — retail & corporate banking, cards, SWIFT, e-banking", ar: "العميل: بنك دلتا التجاري (افتراضي) — الخدمات المصرفية للأفراد والشركات، البطاقات، سويفت، الخدمات المصرفية الإلكترونية" },
+
+  /* Standards registry. url = official source page. */
+  standards: {
+    pci:  { name: "PCI DSS v4.0.1", url: "https://www.pcisecuritystandards.org/document_library/", note: "Free download from the PCI SSC Document Library (requires accepting the licence)." },
+    csf:  { name: "NIST CSF 2.0", url: "https://doi.org/10.6028/NIST.CSWP.29", note: "NIST Cybersecurity Framework 2.0 (Feb 2024)." },
+    iso:  { name: "ISO/IEC 27001:2022 Annex A", url: "https://www.iso.org/standard/27001", note: "Annex A control numbers follow ISO/IEC 27001:2022 (93 controls, 4 themes). Full text is paid." },
+    swift:{ name: "SWIFT CSCF", url: "https://www.swift.com/myswift/customer-security-programme-csp/security-controls", note: "SWIFT Customer Security Controls Framework. Control numbers are stable across recent versions; confirm mandatory/advisory status for the current version and your architecture type." },
+    cbe:  { name: "CBE Financial Cybersecurity Framework", url: "https://www.cbe.org.eg", note: "Central Bank of Egypt framework for regulated banks. Cited at framework level only; confirm the exact clause in the official document before the session." },
+    s61:  { name: "NIST SP 800-61 Rev. 3", url: "https://doi.org/10.6028/NIST.SP.800-61r3", note: "Incident Response Recommendations and Considerations (April 2025)." },
+    s34:  { name: "NIST SP 800-34 Rev. 1", url: "https://doi.org/10.6028/NIST.SP.800-34r1", note: "Contingency Planning Guide for Federal Information Systems." },
+    s40:  { name: "NIST SP 800-40 Rev. 4", url: "https://doi.org/10.6028/NIST.SP.800-40r4", note: "Guide to Enterprise Patch Management Planning (April 2022)." },
+    s63b: { name: "NIST SP 800-63B-4", url: "https://pages.nist.gov/800-63-4/sp800-63b.html", note: "Digital Identity Guidelines: Authentication and Authenticator Management." },
+    s52:  { name: "NIST SP 800-52 Rev. 2", url: "https://doi.org/10.6028/NIST.SP.800-52r2", note: "Guidelines for the Selection, Configuration, and Use of TLS Implementations." },
+    s57:  { name: "NIST SP 800-57 Part 1 Rev. 5", url: "https://doi.org/10.6028/NIST.SP.800-57pt1r5", note: "Recommendation for Key Management: General." },
+    i22301:{ name: "ISO 22301:2019", url: "https://www.iso.org/standard/75106.html", note: "Business continuity management systems — Requirements." },
+    pdpl: { name: "Egypt Law No. 151 of 2020 (PDPL)", url: "", note: "Egyptian Personal Data Protection Law. No hyperlink supplied: obtain the official text from the Egyptian Official Gazette / the Data Protection Centre before the session." }
+  },
+
+  domains: [
+    { id: "AC", en: "Access Control & Identity Management", ar: "التحكم في الوصول وإدارة الهوية",
+      de: "Who can reach systems, data and premises, and how they prove who they are.", da: "من يمكنه الوصول إلى الأنظمة والبيانات والمنشآت، وكيف يثبت هويته." },
+    { id: "NW", en: "Network & Infrastructure Security", ar: "أمن الشبكات والبنية التحتية",
+      de: "Firewalls, segmentation, wireless, hardening and monitoring of the bank's networks.", da: "الجدران النارية والتجزئة والشبكات اللاسلكية والتحصين ومراقبة شبكات البنك." },
+    { id: "AV", en: "Asset & Vulnerability Management", ar: "إدارة الأصول والثغرات",
+      de: "Knowing what you own, finding weaknesses, and fixing them on time.", da: "معرفة ما تملكه، واكتشاف نقاط الضعف، ومعالجتها في الوقت المناسب." },
+    { id: "IR", en: "Incident Response & Business Continuity", ar: "الاستجابة للحوادث واستمرارية الأعمال",
+      de: "Detecting, containing and recovering from incidents while keeping services running.", da: "اكتشاف الحوادث واحتواؤها والتعافي منها مع استمرار الخدمات." },
+    { id: "DP", en: "Data Protection & Encryption", ar: "حماية البيانات والتشفير",
+      de: "Protecting card, account and customer data at rest, in transit and in use.", da: "حماية بيانات البطاقات والحسابات والعملاء أثناء التخزين والنقل والاستخدام." },
+    { id: "VS", en: "Vendor & Supply Chain Risk", ar: "مخاطر الموردين وسلسلة الإمداد",
+      de: "Making sure third parties handling bank data or services are secure.", da: "التأكد من أمن الأطراف الثالثة التي تتعامل مع بيانات البنك أو خدماته." }
+  ],
+
+  items: [
+/* ============ ACCESS CONTROL & IDENTITY ============ */
+{ id: "AC-01", d: "AC", risk: "High", urg: "IMM",
+  owner: { en: "CISO / IAM team", ar: "مدير أمن المعلومات / فريق إدارة الهوية" },
+  tldr: { en: "MFA is enforced for every access path into the cardholder data environment and for all admin and remote access.", ar: "المصادقة متعددة العوامل مفروضة على كل مسارات الوصول إلى بيئة بيانات البطاقات وعلى كل وصول إداري وعن بُعد." },
+  refs: [["pci","8.4.1","MFA for all non-console administrative access into the CDE"],["pci","8.4.2","MFA for all access into the CDE (mandatory since 31 Mar 2025)"],["pci","8.4.3","MFA for all remote network access from outside the entity's network"],["swift","4.2","Multi-factor authentication for the SWIFT environment"],["csf","PR.AA-03","Users, services, and hardware are authenticated"],["iso","A.8.5","Secure authentication"]],
+  q: { en: "Is multi-factor authentication required for every user who can reach the cardholder data environment, including internal staff on the LAN, administrators, VPN users and jump-host sessions?", ar: "هل تُطلب المصادقة متعددة العوامل من كل مستخدم يمكنه الوصول إلى بيئة بيانات البطاقات، بما في ذلك الموظفون داخل الشبكة الداخلية والمسؤولون ومستخدمو الشبكة الافتراضية الخاصة وجلسات خادم القفز؟" },
+  a: { en: ["Obtain a list of all access paths into the CDE (LAN, VPN, jump hosts, cloud consoles) and show the MFA policy applied to each.","Observe a live login to a CDE system and to a firewall admin console; confirm a second factor is requested.","Check that MFA cannot be bypassed (no exempt accounts, factors are independent, replay-resistant) and that failures are logged.","Review the exception register: any account without MFA needs documented, time-limited approval."],
+       ar: ["الحصول على قائمة بكل مسارات الوصول إلى بيئة بيانات البطاقات (الشبكة الداخلية، الشبكة الافتراضية، خوادم القفز، لوحات السحابة) وبيان سياسة المصادقة متعددة العوامل لكل مسار.","مشاهدة عملية دخول مباشرة إلى نظام داخل البيئة وإلى وحدة تحكم الجدار الناري والتأكد من طلب عامل ثانٍ.","التأكد من عدم إمكانية تجاوز المصادقة (لا حسابات مستثناة، عوامل مستقلة، مقاومة لإعادة الاستخدام) وتسجيل حالات الفشل.","مراجعة سجل الاستثناءات: أي حساب بلا مصادقة متعددة العوامل يحتاج موافقة موثقة ومحددة المدة."] },
+  j: { en: "Stolen or phished passwords are the most common way attackers enter bank networks. Without MFA, one leaked password can expose card data or payment systems.", ar: "كلمات المرور المسروقة أو المخدوعة هي أشهر طريقة لاختراق شبكات البنوك. بدون المصادقة متعددة العوامل قد تكشف كلمة مرور واحدة بيانات البطاقات أو أنظمة الدفع." } },
+
+{ id: "AC-02", d: "AC", risk: "High", urg: "W12",
+  owner: { en: "IAM team / IT operations", ar: "فريق إدارة الهوية / عمليات تقنية المعلومات" },
+  tldr: { en: "Every person has a unique ID and a strong password; shared accounts are the documented exception.", ar: "لكل شخص هوية فريدة وكلمة مرور قوية، والحسابات المشتركة استثناء موثّق." },
+  refs: [["pci","8.2.1","All users are assigned a unique ID"],["pci","8.2.2","Shared/group accounts only on exception, with approval and individual accountability"],["pci","8.3.4","Account lockout after a limited number of failed attempts"],["pci","8.3.6","Minimum 12-character passwords"],["s63b","3.1.1","Password requirements, length over composition rules"],["csf","PR.AA-01","Identities and credentials are managed by the organization"],["iso","A.5.16","Identity management"],["iso","A.5.17","Authentication information"]],
+  q: { en: "Can you show that every employee, contractor and service account has a unique ID, that shared accounts are exceptions, and what the password and lockout rules are?", ar: "هل يمكنكم إثبات أن لكل موظف ومقاول وحساب خدمة هوية فريدة، وأن الحسابات المشتركة استثناءات، وما هي قواعد كلمات المرور والقفل؟" },
+  a: { en: ["Export accounts from Active Directory and core banking systems; search for generic or shared names (admin, teller1, svc_*).","Check the password policy: 12+ characters (PCI DSS 8.3.6); compare with NIST SP 800-63B-4 guidance favouring length and no forced periodic rotation.","Confirm lockout after repeated failed logins and that passwords are stored hashed, never in clear text in scripts or config files.","Verify each service account has a named owner and is blocked from interactive login where possible."],
+       ar: ["استخراج الحسابات من الدليل النشط وأنظمة البنك الأساسية والبحث عن أسماء عامة أو مشتركة (admin، teller1، svc_*).","فحص سياسة كلمات المرور: 12 حرفًا فأكثر (PCI DSS 8.3.6) ومقارنتها بإرشادات NIST SP 800-63B-4 التي تفضل الطول وتمنع التغيير الدوري الإجباري.","التأكد من القفل بعد محاولات الدخول الفاشلة المتكررة وأن كلمات المرور مخزنة مُجزّأة (hashed) وليست نصًا صريحًا في السكربتات أو ملفات الإعداد.","التحقق من أن لكل حساب خدمة مالكًا مسمّى وأنه ممنوع من الدخول التفاعلي حيثما أمكن."] },
+  j: { en: "Shared accounts destroy accountability: after a fraud or breach you cannot tell who acted. Weak passwords make brute-force and credential-stuffing attacks cheap.", ar: "الحسابات المشتركة تُضيّع المساءلة؛ فبعد حادث احتيال أو اختراق لا يمكن معرفة من نفّذ الفعل. وكلمات المرور الضعيفة تجعل هجمات التخمين وحشو بيانات الاعتماد رخيصة." } },
+
+{ id: "AC-03", d: "AC", risk: "High", urg: "M13",
+  owner: { en: "Business unit heads / IAM team", ar: "رؤساء الوحدات / فريق إدارة الهوية" },
+  tldr: { en: "Access is role-based, least-privilege, and reviewed at least every six months.", ar: "الوصول قائم على الأدوار بأقل صلاحية لازمة ويُراجع مرة كل ستة أشهر على الأقل." },
+  refs: [["pci","7.2.1","Access control model defined by business need and job function"],["pci","7.2.2","Access assigned on job classification and least privilege"],["pci","7.2.4","User accounts and privileges reviewed at least every six months"],["swift","5.1","Logical access control"],["csf","PR.AA-05","Permissions defined in policy, managed, enforced, reviewed; least privilege and separation of duties"],["iso","A.5.15","Access control"],["iso","A.5.18","Access rights"],["iso","A.5.3","Segregation of duties"]],
+  q: { en: "How are roles defined for core banking, payment and card systems, and when was the last user access review completed and signed off by system owners?", ar: "كيف تُعرَّف الأدوار في النظام المصرفي الأساسي وأنظمة الدفع والبطاقات، ومتى اكتملت آخر مراجعة لصلاحيات المستخدمين واعتمدها مالكو الأنظمة؟" },
+  a: { en: ["Obtain the role matrix for core banking and payments; test a sample of 10 users against their job descriptions.","Check the date and sign-off of the last access recertification; PCI DSS 7.2.4 expects it at least every six months.","Verify segregation of duties: the same person cannot both create and approve a payment or beneficiary.","Remove or reduce excess rights found and track the clean-up to closure."],
+       ar: ["الحصول على مصفوفة الأدوار للنظام المصرفي الأساسي والمدفوعات وفحص عينة من 10 مستخدمين مقابل أوصافهم الوظيفية.","فحص تاريخ واعتماد آخر إعادة تصديق للصلاحيات؛ يتوقع PCI DSS 7.2.4 إجراءها مرة كل ستة أشهر على الأقل.","التحقق من فصل المهام: لا يستطيع الشخص نفسه إنشاء واعتماد دفعة أو مستفيد.","إزالة أو تقليل الصلاحيات الزائدة المكتشفة ومتابعة المعالجة حتى الإغلاق."] },
+  j: { en: "Privilege creep gives staff and attackers more reach than needed. In banking, missing segregation of duties is a direct fraud risk.", ar: "تراكم الصلاحيات يمنح الموظفين والمهاجمين نطاقًا أوسع من اللازم. وفي البنوك يمثل غياب فصل المهام خطر احتيال مباشرًا." } },
+
+{ id: "AC-04", d: "AC", risk: "High", urg: "IMM",
+  owner: { en: "CISO / System administrators", ar: "مدير أمن المعلومات / مسؤولو الأنظمة" },
+  tldr: { en: "Privileged and administrator accounts are separate, tightly controlled and monitored.", ar: "الحسابات ذات الصلاحيات العالية منفصلة ومضبوطة بإحكام ومراقبة." },
+  refs: [["iso","A.8.2","Privileged access rights"],["swift","1.2","Operating system privileged account control"],["swift","5.1","Logical access control"],["pci","7.2.2","Privileged users receive only the access their role requires"],["csf","PR.AA-05","Least privilege and separation of duties"]],
+  q: { en: "How do you control and monitor domain admins, database admins and the accounts that administer SWIFT and card systems? Are admin sessions recorded and credentials vaulted?", ar: "كيف تضبطون وتراقبون مديري النطاق ومديري قواعد البيانات والحسابات التي تدير سويفت وأنظمة البطاقات؟ وهل تُسجَّل الجلسات الإدارية وتُحفظ بيانات الاعتماد في خزنة؟" },
+  a: { en: ["List all privileged accounts and confirm admins use separate day-to-day and admin identities.","Check use of a privileged access management (PAM) vault with just-in-time elevation and session recording.","Confirm break-glass accounts exist, are sealed, and every use is reviewed.","Alert on privileged activity such as new admin creation, log clearing, or off-hours logins."],
+       ar: ["حصر جميع الحسابات ذات الصلاحيات العالية والتأكد من أن المسؤولين يستخدمون هويتين منفصلتين للعمل اليومي والإداري.","التحقق من استخدام خزنة إدارة الوصول المميز (PAM) مع رفع الصلاحية عند الطلب وتسجيل الجلسات.","التأكد من وجود حسابات الطوارئ محكمة الإغلاق ومراجعة كل استخدام لها.","التنبيه على النشاط المميز مثل إنشاء مسؤول جديد أو مسح السجلات أو الدخول خارج أوقات العمل."] },
+  j: { en: "A single compromised admin account lets an attacker disable defences, read all data and move funds. These accounts are the first thing attackers seek.", ar: "حساب إداري واحد مخترق يتيح للمهاجم تعطيل الحماية وقراءة كل البيانات وتحويل الأموال. هذه الحسابات هي أول ما يستهدفه المهاجمون." } },
+
+{ id: "AC-05", d: "AC", risk: "Medium", urg: "W12",
+  owner: { en: "HR / IAM team", ar: "الموارد البشرية / فريق إدارة الهوية" },
+  tldr: { en: "Joiner-mover-leaver process removes access immediately on exit and disables dormant accounts.", ar: "عملية الانضمام والنقل والمغادرة تسحب الوصول فورًا عند الخروج وتعطّل الحسابات الخاملة." },
+  refs: [["pci","8.2.5","Access for terminated users is immediately revoked"],["pci","8.2.6","Inactive user accounts removed or disabled within 90 days"],["iso","A.5.18","Access rights (provisioning, change, removal)"],["iso","A.5.16","Identity management"],["csf","PR.AA-01","Identities and credentials are managed"]],
+  q: { en: "What is the process when someone leaves or changes role, and how quickly is access removed? How do you find dormant accounts?", ar: "ما هي الإجراءات عند مغادرة موظف أو تغيير دوره، وما سرعة سحب الوصول؟ وكيف تكتشفون الحسابات الخاملة؟" },
+  a: { en: ["Compare the last 3 months of HR leaver records with account disable dates for a sample.","Run a report of accounts with no login in 90 days and confirm they are disabled or removed.","Check that role changes trigger removal of old permissions, not only addition of new ones.","Confirm contractor and vendor accounts have expiry dates."],
+       ar: ["مقارنة سجلات المغادرين خلال آخر 3 أشهر لدى الموارد البشرية مع تواريخ تعطيل الحسابات لعينة.","تشغيل تقرير للحسابات التي لم تُستخدم منذ 90 يومًا والتأكد من تعطيلها أو حذفها.","التأكد من أن تغيير الدور يزيل الصلاحيات القديمة وليس فقط إضافة الجديدة.","التأكد من أن حسابات المقاولين والموردين لها تواريخ انتهاء."] },
+  j: { en: "Ex-employee and orphaned accounts are quiet back doors; they are rarely watched, so misuse can go unnoticed for months.", ar: "حسابات الموظفين السابقين والحسابات اليتيمة أبواب خلفية هادئة؛ نادرًا ما تُراقب، فقد يمر إساءة استخدامها دون ملاحظة لأشهر." } },
+
+{ id: "AC-06", d: "AC", risk: "Medium", urg: "M13",
+  owner: { en: "Physical security / Facilities", ar: "الأمن المادي / إدارة المرافق" },
+  tldr: { en: "Data centres, server rooms and SWIFT/HSM areas have controlled, logged and reviewed physical access.", ar: "مراكز البيانات وغرف الخوادم ومناطق سويفت وHSM لها وصول مادي مضبوط ومسجل ومراجع." },
+  refs: [["pci","9.2.1","Appropriate facility entry controls restrict access to systems in the CDE"],["pci","9.3.2","Visitor access is authorised, escorted and logged"],["swift","3.1","Physical security"],["iso","A.7.1","Physical security perimeters"],["iso","A.7.2","Physical entry"],["csf","PR.AA-06","Physical access to assets is managed, monitored and enforced"]],
+  q: { en: "Who may enter the primary and DR data centres and the room hosting the SWIFT and HSM equipment, and how are entries logged and reviewed?", ar: "من يُسمح له بدخول مركز البيانات الرئيسي ومركز التعافي من الكوارث والغرفة التي تضم أجهزة سويفت وHSM، وكيف تُسجَّل الدخولات وتُراجع؟" },
+  a: { en: ["Obtain the authorised-access list for each secure area and compare with badge logs for the last month.","Check that visitors sign in, wear identification and are escorted at all times.","Verify CCTV coverage and retention of footage for sensitive areas.","Confirm access lists are reviewed regularly and removed on role change or exit."],
+       ar: ["الحصول على قائمة المصرّح لهم بدخول كل منطقة آمنة ومقارنتها بسجلات البطاقات للشهر الأخير.","التأكد من أن الزوار يسجلون دخولهم ويحملون تعريفًا ويرافقهم مرافق دائمًا.","التحقق من تغطية كاميرات المراقبة ومدة الاحتفاظ بالتسجيلات للمناطق الحساسة.","التأكد من مراجعة قوائم الدخول دوريًا وإزالتها عند تغيير الدور أو المغادرة."] },
+  j: { en: "Physical access can bypass every logical control: someone in the server room can plug in a device or take storage media.", ar: "الوصول المادي قد يتجاوز كل الضوابط المنطقية؛ فمن يدخل غرفة الخوادم يستطيع توصيل جهاز أو أخذ وسائط تخزين." } },
+
+/* ============ NETWORK & INFRASTRUCTURE ============ */
+{ id: "NW-01", d: "NW", risk: "High", urg: "W12",
+  owner: { en: "Network administrators", ar: "مسؤولو الشبكات" },
+  tldr: { en: "Firewall rules are documented, default-deny, and reviewed at least every six months.", ar: "قواعد الجدار الناري موثقة بمبدأ المنع الافتراضي وتُراجع مرة كل ستة أشهر على الأقل." },
+  refs: [["pci","1.2.5","All allowed services, protocols and ports are identified, approved and justified"],["pci","1.2.7","Network security control configurations reviewed at least every six months"],["pci","1.3.1","Inbound traffic to the CDE is restricted to what is necessary"],["pci","1.3.2","Outbound traffic from the CDE is restricted to what is necessary"],["iso","A.8.20","Networks security"],["csf","PR.IR-01","Networks and environments are protected from unauthorized logical access"]],
+  q: { en: "When was the firewall and router rule base last reviewed, and how do you ensure every open port has an approved business reason?", ar: "متى كانت آخر مراجعة لقواعد الجدران النارية والموجّهات، وكيف تضمنون أن لكل منفذ مفتوح مبررًا تجاريًا معتمدًا؟" },
+  a: { en: ["Obtain the rule review report and sign-off for the last 6 months.","Sample 20 rules, trace each to a change ticket and business owner, and look for 'any-any' or unused rules.","Verify the final rule is deny-all for inbound and outbound traffic to the CDE.","Confirm network diagrams and data-flow diagrams match what is configured."],
+       ar: ["الحصول على تقرير مراجعة القواعد واعتماده للأشهر الستة الأخيرة.","فحص عينة من 20 قاعدة وربط كل منها بتذكرة تغيير ومالك عمل والبحث عن قواعد (any-any) أو غير مستخدمة.","التحقق من أن القاعدة الأخيرة هي منع الكل للمرور الداخل والخارج من بيئة بيانات البطاقات وإليها.","التأكد من تطابق مخططات الشبكة ومخططات تدفق البيانات مع الإعدادات الفعلية."] },
+  j: { en: "Rule bases grow messy over time. Forgotten open ports and overly broad rules are a common reason attackers can reach internal systems.", ar: "تتراكم القواعد وتتشوش مع الوقت. المنافذ المفتوحة المنسية والقواعد الواسعة أكثر مما يلزم سبب شائع لوصول المهاجمين إلى الأنظمة الداخلية." } },
+
+{ id: "NW-02", d: "NW", risk: "High", urg: "IMM",
+  owner: { en: "Network architecture / CISO", ar: "هندسة الشبكات / مدير أمن المعلومات" },
+  tldr: { en: "Card and SWIFT environments are segmented from the general corporate network, and segmentation is tested.", ar: "بيئتا البطاقات وسويفت معزولتان عن الشبكة العامة للمؤسسة وتُختبر هذه العزلة." },
+  refs: [["pci","1.4.1","Network security controls between trusted and untrusted networks"],["pci","11.4.5","If segmentation is used, penetration test to verify it at least every 12 months"],["swift","1.1","SWIFT environment protection (secure zone)"],["swift","1.5","Customer environment protection"],["iso","A.8.22","Segregation of networks"],["csf","PR.IR-01","Networks are protected from unauthorized logical access"]],
+  q: { en: "How are the cardholder data environment and the SWIFT secure zone separated from office, guest and branch networks, and when was this separation last tested?", ar: "كيف تُفصل بيئة بيانات البطاقات ومنطقة سويفت الآمنة عن شبكات المكاتب والضيوف والفروع، ومتى اختُبر هذا الفصل آخر مرة؟" },
+  a: { en: ["Review the network architecture diagram and firewall rules between zones.","Obtain the latest segmentation penetration test report (required at least every 12 months where segmentation reduces PCI scope).","Confirm no direct internet access from the SWIFT secure zone beyond approved paths.","Check that branch and guest Wi-Fi cannot route to the CDE."],
+       ar: ["مراجعة مخطط معمارية الشبكة وقواعد الجدار الناري بين المناطق.","الحصول على أحدث تقرير اختبار اختراق للعزل (مطلوب مرة كل 12 شهرًا على الأقل حين يقلّل العزل نطاق PCI).","التأكد من عدم وجود وصول مباشر إلى الإنترنت من منطقة سويفت الآمنة خارج المسارات المعتمدة.","التحقق من أن شبكات الفروع والضيوف اللاسلكية لا تستطيع الوصول إلى بيئة بيانات البطاقات."] },
+  j: { en: "Segmentation limits how far an attacker can travel after one infected laptop. Weak separation has repeatedly let intruders reach bank payment systems.", ar: "العزل يحدّ من مدى تحرك المهاجم بعد إصابة حاسوب واحد. وقد سمح ضعف العزل مرارًا للمخترقين بالوصول إلى أنظمة الدفع في البنوك." } },
+
+{ id: "NW-03", d: "NW", risk: "Medium", urg: "M13",
+  owner: { en: "Network administrators", ar: "مسؤولو الشبكات" },
+  tldr: { en: "Wireless networks are inventoried, strongly encrypted, and rogue access points are detected.", ar: "الشبكات اللاسلكية مجرودة ومشفرة بقوة ويتم اكتشاف نقاط الوصول المارقة." },
+  refs: [["pci","11.2.1","Authorised and unauthorised wireless access points are managed"],["pci","11.2.2","Inventory of authorised wireless access points with business justification"],["pci","2.3.1","Wireless vendor defaults (keys, passwords) changed at installation or confirmed secure"],["iso","A.8.20","Networks security"],["csf","PR.IR-01","Networks are protected from unauthorized logical access"]],
+  q: { en: "How many wireless networks does the bank run in branches and head office, and how do you detect unapproved access points?", ar: "كم عدد الشبكات اللاسلكية التي يشغلها البنك في الفروع والمقر الرئيسي، وكيف تكتشفون نقاط الوصول غير المعتمدة؟" },
+  a: { en: ["Obtain the inventory of authorised access points and SSIDs with business justification.","Verify WPA2/WPA3-Enterprise for staff Wi-Fi and complete separation of guest Wi-Fi.","Check quarterly wireless scans or a wireless IDS that flags rogue devices.","Confirm vendor default credentials and keys were changed."],
+       ar: ["الحصول على جرد نقاط الوصول وأسماء الشبكات المعتمدة مع المبرر التجاري.","التحقق من استخدام WPA2/WPA3-Enterprise لشبكة الموظفين وعزل شبكة الضيوف تمامًا.","فحص وجود مسح لاسلكي ربع سنوي أو نظام كشف اختراق لاسلكي ينبّه إلى الأجهزة المارقة.","التأكد من تغيير بيانات الاعتماد والمفاتيح الافتراضية للمورد."] },
+  j: { en: "A rogue or weakly protected access point is an easy bridge into the internal network, especially in remote branches with little IT presence.", ar: "نقطة وصول مارقة أو ضعيفة الحماية جسر سهل إلى الشبكة الداخلية، خاصة في الفروع البعيدة قليلة الحضور التقني." } },
+
+{ id: "NW-04", d: "NW", risk: "High", urg: "M13",
+  owner: { en: "System & network administrators", ar: "مسؤولو الأنظمة والشبكات" },
+  tldr: { en: "Systems are built from hardened baselines; vendor defaults and unneeded services are removed.", ar: "الأنظمة تُبنى من خطوط أساس محصّنة وتُزال الإعدادات الافتراضية والخدمات غير اللازمة." },
+  refs: [["pci","2.2.1","Configuration standards developed, implemented and maintained"],["pci","2.2.2","Vendor default accounts managed (changed or disabled)"],["pci","2.2.4","Only necessary services, protocols and functions enabled"],["swift","2.3","System hardening"],["iso","A.8.9","Configuration management"],["csf","PR.PS-01","Configuration management practices are established and applied"]],
+  q: { en: "Do you have documented hardening baselines for servers, network devices and databases, and how do you detect drift from them?", ar: "هل لديكم خطوط أساس تحصين موثقة للخوادم وأجهزة الشبكة وقواعد البيانات، وكيف تكتشفون الانحراف عنها؟" },
+  a: { en: ["Obtain the baseline standards (for example based on CIS Benchmarks or vendor guides).","Sample 5 servers and 3 network devices and compare actual settings with the baseline.","Check that vendor default passwords and sample accounts are removed.","Verify configuration drift is monitored and changes go through change management."],
+       ar: ["الحصول على معايير خطوط الأساس (مثل معايير CIS Benchmarks أو أدلة المورد).","فحص عينة من 5 خوادم و3 أجهزة شبكة ومقارنة الإعدادات الفعلية بخط الأساس.","التأكد من إزالة كلمات المرور الافتراضية والحسابات التجريبية.","التحقق من مراقبة انحراف الإعدادات ومرور التغييرات عبر إدارة التغيير."] },
+  j: { en: "Default and unnecessary settings are published knowledge to attackers. Hardening removes easy wins and makes later patching more effective.", ar: "الإعدادات الافتراضية وغير الضرورية معروفة للمهاجمين. التحصين يزيل المكاسب السهلة ويجعل التحديثات اللاحقة أكثر فاعلية." } },
+
+{ id: "NW-05", d: "NW", risk: "High", urg: "W12",
+  owner: { en: "SOC manager / Security analysts", ar: "مدير مركز العمليات الأمنية / محللو الأمن" },
+  tldr: { en: "Security logs are centralised, reviewed daily, tamper-protected and kept for 12 months.", ar: "سجلات الأمن مركزية وتُراجع يوميًا ومحمية من التلاعب وتُحفظ 12 شهرًا." },
+  refs: [["pci","10.2.1","Audit logs are enabled and active for all system components"],["pci","10.4.1","Audit logs are reviewed at least once daily"],["pci","10.5.1","Audit log history retained 12 months, with at least the last 3 months immediately available"],["swift","6.4","Logging and monitoring"],["iso","A.8.15","Logging"],["iso","A.8.16","Monitoring activities"],["csf","PR.PS-04","Log records are generated and made available for continuous monitoring"],["csf","DE.CM-01","Networks and network services are monitored to find potentially adverse events"]],
+  q: { en: "Which systems send logs to your SIEM, who reviews alerts, how often, and how long are logs retained?", ar: "ما الأنظمة التي ترسل سجلاتها إلى نظام إدارة الأحداث (SIEM)، ومن يراجع التنبيهات ومتى، وما مدة الاحتفاظ بالسجلات؟" },
+  a: { en: ["Compare the asset list with the log-source list and identify unmonitored critical systems.","Review SIEM use cases (failed logins, privilege use, SWIFT and card system anomalies) and alert-handling records.","Confirm retention of 12 months with 3 months online, and that logs are protected from change or deletion.","Verify time synchronisation across devices so events can be correlated."],
+       ar: ["مقارنة قائمة الأصول مع قائمة مصادر السجلات وتحديد الأنظمة الحرجة غير المراقبة.","مراجعة حالات الاستخدام في SIEM (فشل الدخول، استخدام الصلاحيات، شذوذ أنظمة سويفت والبطاقات) وسجلات معالجة التنبيهات.","التأكد من الاحتفاظ 12 شهرًا مع إتاحة 3 أشهر فورًا وحماية السجلات من التعديل أو الحذف.","التحقق من مزامنة الوقت بين الأجهزة لإمكانية ربط الأحداث."] },
+  j: { en: "Attackers often stay inside for weeks. Logs are the only way to notice them and to prove later what happened.", ar: "غالبًا ما يبقى المهاجمون داخل الشبكة أسابيع. السجلات هي الوسيلة الوحيدة لاكتشافهم ولإثبات ما حدث لاحقًا." } },
+
+{ id: "NW-06", d: "NW", risk: "Medium", urg: "M13",
+  owner: { en: "Network security team", ar: "فريق أمن الشبكات" },
+  tldr: { en: "Intrusion detection/prevention is deployed and critical systems have restricted Internet access.", ar: "نظام كشف/منع التسلل مفعّل والأنظمة الحرجة لها وصول مقيّد إلى الإنترنت." },
+  refs: [["pci","11.5.1","Intrusion-detection and/or intrusion-prevention techniques detect and prevent intrusions"],["swift","1.4","Restriction of Internet access"],["swift","6.5A","Intrusion detection (advisory)"],["iso","A.8.23","Web filtering"],["csf","DE.CM-01","Networks and network services are monitored"]],
+  q: { en: "Where are IDS/IPS sensors placed, how are signatures kept current, and can servers in the payment zones browse the Internet?", ar: "أين توضع حساسات IDS/IPS، وكيف تُحدَّث التواقيع، وهل تستطيع الخوادم في مناطق الدفع تصفح الإنترنت؟" },
+  a: { en: ["Review the sensor placement diagram at the perimeter and at critical internal points.","Check signature/rule update frequency and tuning records.","Confirm internet access from payment and SWIFT zones is blocked or limited to approved destinations.","Verify web and DNS filtering for user workstations."],
+       ar: ["مراجعة مخطط توزيع الحساسات على المحيط وعند النقاط الداخلية الحرجة.","فحص دورية تحديث التواقيع والقواعد وسجلات الضبط.","التأكد من حجب الإنترنت أو تقييده بوجهات معتمدة من مناطق الدفع وسويفت.","التحقق من تصفية الويب وDNS لمحطات المستخدمين."] },
+  j: { en: "Detection tools shorten the time between intrusion and response; restricting Internet access removes the most common route for malware downloads and data theft.", ar: "أدوات الكشف تقلص الزمن بين الاختراق والاستجابة، وتقييد الإنترنت يغلق أشهر طريق لتنزيل البرمجيات الخبيثة وسرقة البيانات." } },
+
+/* ============ ASSET & VULNERABILITY ============ */
+{ id: "AV-01", d: "AV", risk: "High", urg: "M13",
+  owner: { en: "IT operations / CMDB owner", ar: "عمليات تقنية المعلومات / مالك قاعدة الأصول" },
+  tldr: { en: "A complete, current inventory of hardware, software and in-scope systems exists.", ar: "يوجد جرد كامل وحديث للأجهزة والبرمجيات والأنظمة ضمن النطاق." },
+  refs: [["pci","12.5.1","Inventory of system components in scope for PCI DSS is maintained"],["pci","12.5.2","PCI DSS scope documented and confirmed at least every 12 months"],["iso","A.5.9","Inventory of information and other associated assets"],["csf","ID.AM-01","Inventories of hardware managed by the organization are maintained"],["csf","ID.AM-02","Inventories of software, services and systems are maintained"]],
+  q: { en: "How do you know every server, endpoint, network device, application and cloud service the bank runs, and who owns each?", ar: "كيف تعرفون كل خادم وجهاز ونقطة نهاية وتطبيق وخدمة سحابية يشغلها البنك، ومن مالك كل منها؟" },
+  a: { en: ["Obtain the asset inventory (CMDB) and run a network discovery scan to compare.","Check each asset has an owner, criticality rating and data classification.","Confirm shadow IT and cloud accounts are included.","Verify the PCI scope was documented and re-confirmed in the last 12 months."],
+       ar: ["الحصول على جرد الأصول (CMDB) وتشغيل مسح اكتشاف للشبكة للمقارنة.","التأكد من أن لكل أصل مالكًا وتصنيف أهمية وتصنيف بيانات.","التأكد من إدراج تقنية المعلومات الظلية والحسابات السحابية.","التحقق من توثيق نطاق PCI وإعادة تأكيده خلال آخر 12 شهرًا."] },
+  j: { en: "You cannot protect, patch or monitor what you do not know exists. Unknown systems are where breaches often start.", ar: "لا يمكنك حماية أو تحديث أو مراقبة ما لا تعرف بوجوده. الأنظمة المجهولة هي كثيرًا نقطة بداية الاختراقات." } },
+
+{ id: "AV-02", d: "AV", risk: "High", urg: "W12",
+  owner: { en: "Vulnerability management team", ar: "فريق إدارة الثغرات" },
+  tldr: { en: "Internal and external vulnerability scans run at least quarterly with tracked remediation.", ar: "تُجرى فحوصات الثغرات الداخلية والخارجية ربع سنويًا على الأقل مع تتبع المعالجة." },
+  refs: [["pci","11.3.1","Internal vulnerability scans at least once every three months"],["pci","11.3.2","External vulnerability scans by an ASV at least once every three months"],["swift","2.7","Vulnerability scanning"],["iso","A.8.8","Management of technical vulnerabilities"],["csf","ID.RA-01","Vulnerabilities in assets are identified, validated and recorded"]],
+  q: { en: "How often do you scan internal and internet-facing systems, who receives the results, and how are high-risk findings tracked until closed?", ar: "كم مرة تفحصون الأنظمة الداخلية والمواجهة للإنترنت، ومن يستلم النتائج، وكيف تُتابع الثغرات عالية الخطورة حتى إغلاقها؟" },
+  a: { en: ["Obtain scan reports for the last four quarters, including an ASV report for external systems.","Check scan coverage against the asset inventory, with authenticated scanning where possible.","Review remediation tickets for high and critical findings and their closure dates.","Confirm rescans verify fixes."],
+       ar: ["الحصول على تقارير الفحص للأرباع الأربعة الأخيرة بما فيها تقرير ASV للأنظمة الخارجية.","مقارنة تغطية الفحص بجرد الأصول مع الفحص بالمصادقة حيثما أمكن.","مراجعة تذاكر المعالجة للثغرات العالية والحرجة وتواريخ إغلاقها.","التأكد من أن إعادة الفحص تتحقق من الإصلاحات."] },
+  j: { en: "Known vulnerabilities are exploited within days of publication. Regular scanning is how the bank finds them before attackers do.", ar: "تُستغل الثغرات المعروفة خلال أيام من نشرها. الفحص المنتظم هو وسيلة البنك لاكتشافها قبل المهاجمين." } },
+
+{ id: "AV-03", d: "AV", risk: "High", urg: "IMM",
+  owner: { en: "IT operations / Patch management lead", ar: "عمليات تقنية المعلومات / مسؤول إدارة التحديثات" },
+  tldr: { en: "Critical security patches are installed within one month of release; others by risk-based deadlines.", ar: "تُثبَّت التحديثات الأمنية الحرجة خلال شهر من صدورها، وغيرها وفق مواعيد مبنية على المخاطر." },
+  refs: [["pci","6.3.3","Critical security patches installed within one month of release; others within a risk-based timeframe"],["swift","2.2","Security updates"],["s40","Section 3","Enterprise patch management planning recommendations"],["iso","A.8.8","Management of technical vulnerabilities"],["csf","PR.PS-02","Software is maintained, replaced and removed commensurate with risk"]],
+  q: { en: "What is your patching service-level agreement, what percentage of critical patches met it last quarter, and how do you handle systems that cannot be patched?", ar: "ما اتفاقية مستوى الخدمة لديكم للتحديثات، وما نسبة التحديثات الحرجة التي التزمت بها في الربع الماضي، وكيف تتعاملون مع الأنظمة التي لا يمكن تحديثها؟" },
+  a: { en: ["Obtain the patch policy and compare its deadlines with PCI DSS 6.3.3.","Pull patch compliance reports for servers, endpoints and network devices for the last quarter.","Sample 5 recent critical vendor advisories and confirm deployment dates.","Check end-of-life systems have compensating controls and a retirement plan."],
+       ar: ["الحصول على سياسة التحديثات ومقارنة مواعيدها بمتطلب PCI DSS 6.3.3.","استخراج تقارير الالتزام بالتحديثات للخوادم ونقاط النهاية وأجهزة الشبكة للربع الأخير.","فحص 5 تنبيهات حرجة حديثة من الموردين والتأكد من تواريخ التثبيت.","التأكد من أن الأنظمة المنتهية الدعم لها ضوابط تعويضية وخطة إحالة للتقاعد."] },
+  j: { en: "Unpatched critical flaws are among the most frequent root causes of ransomware and bank intrusions.", ar: "الثغرات الحرجة غير المحدّثة من أكثر الأسباب الجذرية لهجمات الفدية واختراقات البنوك." } },
+
+{ id: "AV-04", d: "AV", risk: "Medium", urg: "M13",
+  owner: { en: "CISO / Internal audit", ar: "مدير أمن المعلومات / التدقيق الداخلي" },
+  tldr: { en: "Penetration tests are done at least yearly and after significant changes, with findings fixed.", ar: "تُجرى اختبارات الاختراق سنويًا على الأقل وبعد التغييرات الجوهرية مع معالجة النتائج." },
+  refs: [["pci","11.4.1","Penetration testing methodology defined, documented and implemented"],["pci","11.4.2","Internal penetration testing at least every 12 months and after significant change"],["pci","11.4.3","External penetration testing at least every 12 months and after significant change"],["swift","7.3A","Penetration testing (advisory)"],["iso","A.8.29","Security testing in development and acceptance"],["csf","ID.IM-02","Improvements are identified from security tests and exercises"]],
+  q: { en: "Who performs penetration testing, what was in scope last time, and how were critical findings remediated and retested?", ar: "من ينفذ اختبارات الاختراق، وما النطاق في آخر اختبار، وكيف عولجت النتائج الحرجة وأُعيد اختبارها؟" },
+  a: { en: ["Obtain the latest internal and external penetration test reports and scope statements.","Confirm testers are qualified and organisationally independent.","Check that e-banking, mobile apps and payment interfaces were in scope.","Verify retest evidence for high and critical findings."],
+       ar: ["الحصول على أحدث تقارير اختبار الاختراق الداخلي والخارجي وبيانات النطاق.","التأكد من تأهيل المختبرين واستقلالهم تنظيميًا.","التحقق من أن الخدمات المصرفية الإلكترونية وتطبيقات الجوال وواجهات الدفع كانت ضمن النطاق.","التحقق من وجود دليل على إعادة الاختبار للنتائج العالية والحرجة."] },
+  j: { en: "Scanners find known flaws; skilled testers find the chains of weaknesses real attackers use against banks.", ar: "الماسحات تجد الثغرات المعروفة، أما المختبرون المهرة فيجدون سلاسل نقاط الضعف التي يستخدمها المهاجمون الحقيقيون ضد البنوك." } },
+
+{ id: "AV-05", d: "AV", risk: "Medium", urg: "M13",
+  owner: { en: "Endpoint security team", ar: "فريق أمن نقاط النهاية" },
+  tldr: { en: "Anti-malware / EDR protects all systems, stays current and cannot be disabled by users.", ar: "برامج مكافحة البرمجيات الخبيثة / EDR تحمي كل الأنظمة وتبقى محدّثة ولا يستطيع المستخدمون تعطيلها." },
+  refs: [["pci","5.2.1","Anti-malware solution deployed on all system components at risk"],["pci","5.3.1","Anti-malware solution kept current via automatic updates"],["swift","6.1","Malware protection"],["iso","A.8.7","Protection against malware"],["csf","DE.CM-09","Computing hardware and software, runtime environments and data are monitored"]],
+  q: { en: "What percentage of endpoints and servers run the endpoint protection agent, and what happens when an alert fires?", ar: "ما نسبة نقاط النهاية والخوادم التي يعمل عليها وكيل الحماية، وماذا يحدث عند ظهور تنبيه؟" },
+  a: { en: ["Obtain the agent coverage and signature-currency report from the console.","Test that users cannot disable protection (tamper protection is on).","Check alerts flow to the SOC and are triaged with documented response times.","Verify removable media and email attachments are scanned."],
+       ar: ["الحصول على تقرير تغطية الوكيل ومدى حداثة التواقيع من وحدة التحكم.","اختبار أن المستخدمين لا يستطيعون تعطيل الحماية (حماية العبث مفعّلة).","التأكد من وصول التنبيهات إلى مركز العمليات وفرزها بأزمنة استجابة موثقة.","التحقق من فحص الوسائط القابلة للإزالة ومرفقات البريد."] },
+  j: { en: "Malware, especially ransomware, can halt branches and payment processing. Endpoint protection is the baseline defence.", ar: "البرمجيات الخبيثة، وخاصة الفدية، قد توقف الفروع ومعالجة المدفوعات. حماية نقاط النهاية خط الدفاع الأساسي." } },
+
+{ id: "AV-06", d: "AV", risk: "High", urg: "M13",
+  owner: { en: "Application development / AppSec lead", ar: "تطوير التطبيقات / مسؤول أمن التطبيقات" },
+  tldr: { en: "E-banking and mobile apps are built securely and web-facing apps are protected by a WAF.", ar: "تطبيقات الخدمات المصرفية الإلكترونية والجوال تُبنى بأمان والتطبيقات المواجهة للويب محمية بجدار حماية تطبيقات." },
+  refs: [["pci","6.2.4","Software engineering techniques prevent or mitigate common software attacks"],["pci","6.4.2","Automated technical solution detects and prevents web-based attacks on public-facing web applications"],["pci","6.3.2","Inventory of bespoke, custom and third-party software components maintained"],["iso","A.8.28","Secure coding"],["iso","A.8.29","Security testing in development and acceptance"],["csf","PR.PS-06","Secure software development practices are integrated and monitored"]],
+  q: { en: "How is security built into development of the online banking and mobile apps, and what protects them from web attacks in production?", ar: "كيف يُدمج الأمن في تطوير تطبيقات الخدمات المصرفية عبر الإنترنت والجوال، وما الذي يحميها من هجمات الويب في الإنتاج؟" },
+  a: { en: ["Review the secure development lifecycle: threat modelling, code review, SAST/DAST and developer training.","Confirm a WAF or equivalent runs in blocking mode in front of public applications.","Check third-party libraries are inventoried and scanned for known vulnerabilities.","Verify security testing sign-off before each release."],
+       ar: ["مراجعة دورة التطوير الآمن: نمذجة التهديدات ومراجعة الشيفرة وأدوات SAST/DAST وتدريب المطورين.","التأكد من تشغيل WAF أو ما يعادله بوضع المنع أمام التطبيقات العامة.","التحقق من جرد المكتبات الخارجية وفحصها بحثًا عن ثغرات معروفة.","التحقق من اعتماد اختبار الأمن قبل كل إصدار."] },
+  j: { en: "Customer-facing apps are the bank's most exposed surface; a coding flaw can expose account data or enable fraud at scale.", ar: "تطبيقات العملاء هي أكثر أسطح البنك انكشافًا؛ وخلل برمجي قد يكشف بيانات الحسابات أو يتيح احتيالًا واسع النطاق." } },
+
+/* ============ INCIDENT RESPONSE & CONTINUITY ============ */
+{ id: "IR-01", d: "IR", risk: "High", urg: "W12",
+  owner: { en: "CISO / Incident response lead", ar: "مدير أمن المعلومات / قائد الاستجابة للحوادث" },
+  tldr: { en: "A documented, approved incident response plan defines roles, escalation, containment and communications.", ar: "توجد خطة استجابة للحوادث موثقة ومعتمدة تحدد الأدوار والتصعيد والاحتواء والاتصالات." },
+  refs: [["pci","12.10.1","Incident response plan exists and is ready to be activated"],["swift","7.1","Cyber incident response planning"],["s61","RS.MA-01","Incident response plan is executed once an incident is declared"],["iso","A.5.24","Information security incident management planning and preparation"],["csf","RS.MA-01","Incident response plan is executed in coordination with relevant third parties"]],
+  q: { en: "Please walk me through your incident response plan: who declares an incident, who leads, and who has authority to isolate systems?", ar: "يرجى شرح خطة الاستجابة للحوادث: من يعلن الحادث، ومن يقود، ومن لديه صلاحية عزل الأنظمة؟" },
+  a: { en: ["Obtain the plan; check approval date, version, owners, severity levels and contact lists.","Confirm it covers ransomware, card-data breach, SWIFT fraud, DDoS and insider incidents.","Verify authority to disconnect systems is clearly assigned.","Check the plan is accessible offline during an outage."],
+       ar: ["الحصول على الخطة وفحص تاريخ الاعتماد والإصدار والمالكين ومستويات الخطورة وقوائم الاتصال.","التأكد من تغطيتها للفدية وخرق بيانات البطاقات واحتيال سويفت والحرمان من الخدمة والحوادث الداخلية.","التحقق من وضوح صلاحية فصل الأنظمة.","التأكد من إتاحة الخطة دون اتصال أثناء الانقطاع."] },
+  j: { en: "In an incident, minutes matter. A clear plan avoids confusion over who decides and what happens first.", ar: "في الحوادث الدقائق مهمة. الخطة الواضحة تمنع الارتباك حول من يقرر وما الذي يحدث أولًا." } },
+
+{ id: "IR-02", d: "IR", risk: "Medium", urg: "M13",
+  owner: { en: "CISO / Crisis management team", ar: "مدير أمن المعلومات / فريق إدارة الأزمات" },
+  tldr: { en: "The response plan is tested at least annually with realistic exercises, and lessons are fed back.", ar: "تُختبر خطة الاستجابة مرة سنويًا على الأقل بتمارين واقعية وتُستخلص الدروس." },
+  refs: [["pci","12.10.2","Incident response plan reviewed and tested at least once every 12 months"],["swift","7.4A","Scenario risk assessment (advisory)"],["csf","ID.IM-02","Improvements are identified from security tests and exercises"],["s61","ID.IM","Improvement: lessons learned feed back into plans and processes"],["iso","A.5.24","Incident management planning and preparation"]],
+  q: { en: "When did you last run a tabletop or simulated incident, who attended, and what changed afterwards?", ar: "متى أجريتم آخر تمرين طاولة أو محاكاة لحادث، ومن حضر، وما الذي تغير بعده؟" },
+  a: { en: ["Obtain the last exercise report, attendee list and action log.","Check scenarios included executives, communications and legal, not only IT.","Verify action items were assigned and closed.","Confirm the plan was updated after the exercise."],
+       ar: ["الحصول على تقرير آخر تمرين وقائمة الحضور وسجل الإجراءات.","التأكد من مشاركة الإدارة العليا والاتصال المؤسسي والقانونية وليس تقنية المعلومات فقط.","التحقق من إسناد الإجراءات وإغلاقها.","التأكد من تحديث الخطة بعد التمرين."] },
+  j: { en: "Untested plans fail in practice. Exercises expose gaps in a safe setting before a real attacker does.", ar: "الخطط غير المختبرة تفشل عمليًا. التمارين تكشف الفجوات في بيئة آمنة قبل أن يكشفها مهاجم حقيقي." } },
+
+{ id: "IR-03", d: "IR", risk: "High", urg: "W12",
+  owner: { en: "SOC manager", ar: "مدير مركز العمليات الأمنية" },
+  tldr: { en: "Security alerts are monitored around the clock and trained responders are always on call.", ar: "تُراقب التنبيهات الأمنية على مدار الساعة ويتوفر دائمًا مستجيبون مدرّبون." },
+  refs: [["pci","12.10.3","Specific personnel designated to respond 24/7 to suspected or confirmed incidents"],["pci","12.10.5","Incident response plan includes monitoring and responding to security monitoring alerts"],["iso","A.5.25","Assessment and decision on information security events"],["iso","A.5.26","Response to information security incidents"],["iso","A.6.8","Information security event reporting"],["csf","DE.AE-02","Potentially adverse events are analyzed to better understand associated activities"]],
+  q: { en: "Who watches security alerts at night and on holidays, and how fast must they respond to a critical alert?", ar: "من يراقب التنبيهات الأمنية ليلًا وفي العطلات، وما السرعة المطلوبة للاستجابة لتنبيه حرج؟" },
+  a: { en: ["Obtain the on-call roster and escalation matrix.","Review response-time targets and last quarter's actual times for critical alerts.","Verify staff know how to report suspicious events; check the reporting channel exists.","If outsourced to an MSSP, check the contract's service levels."],
+       ar: ["الحصول على جدول المناوبات ومصفوفة التصعيد.","مراجعة مستهدفات زمن الاستجابة والأزمنة الفعلية للتنبيهات الحرجة في الربع الماضي.","التحقق من معرفة الموظفين بكيفية الإبلاغ عن الأحداث المشبوهة ووجود قناة إبلاغ.","في حال الاستعانة بمزود خدمات مُدارة، فحص مستويات الخدمة في العقد."] },
+  j: { en: "Attacks on banks often begin out of hours. Detection without a response team on duty only produces a record of what went wrong.", ar: "هجمات البنوك تبدأ غالبًا خارج ساعات العمل. الكشف بدون فريق مناوب للاستجابة لا ينتج سوى سجل لما حدث من خطأ." } },
+
+{ id: "IR-04", d: "IR", risk: "High", urg: "W12",
+  owner: { en: "CISO / Compliance / Legal / Communications", ar: "مدير أمن المعلومات / الامتثال / الشؤون القانونية / الاتصال المؤسسي" },
+  tldr: { en: "Incident notification duties to the regulator, card brands, SWIFT, customers and partners are defined and rehearsed.", ar: "التزامات الإبلاغ عن الحوادث للجهة الرقابية وشبكات البطاقات وسويفت والعملاء والشركاء محددة ومُجرّبة." },
+  refs: [["cbe","Incident reporting","Regulator notification expectations for banks (confirm the clause in the official framework)"],["pci","12.10.1","Plan includes communication and contact strategies, including notification of payment brands and acquirers"],["csf","RS.CO-02","Internal and external stakeholders are notified of incidents"],["s61","RS.CO","Incident response reporting and communication"],["iso","A.5.26","Response to information security incidents"]],
+  q: { en: "Within what time must you notify the Central Bank, card schemes and SWIFT of a serious incident, and who sends those notices?", ar: "خلال أي مدة يجب إبلاغ البنك المركزي وشبكات البطاقات وسويفت بحادث جسيم، ومن يرسل هذه الإشعارات؟" },
+  a: { en: ["Obtain the notification matrix listing each party, deadline, channel and approver.","Confirm the deadlines match the current regulator and card-scheme requirements.","Check template notices exist and legal approves customer communications.","Verify forensic evidence handling so reports can be substantiated."],
+       ar: ["الحصول على مصفوفة الإخطار التي تبين كل جهة والمهلة والقناة والمعتمد.","التأكد من مطابقة المهل لمتطلبات الجهة الرقابية وشبكات البطاقات الحالية.","فحص وجود نماذج إشعارات واعتماد الشؤون القانونية لرسائل العملاء.","التحقق من التعامل مع الأدلة الجنائية بحيث يمكن إثبات ما يُبلَّغ عنه."] },
+  j: { en: "Late or missing notifications bring regulatory penalties and loss of customer trust, on top of the incident itself.", ar: "الإبلاغ المتأخر أو الغائب يجلب عقوبات رقابية وفقدان ثقة العملاء فوق الحادث نفسه." } },
+
+{ id: "IR-05", d: "IR", risk: "High", urg: "W12",
+  owner: { en: "Infrastructure & backup team", ar: "فريق البنية التحتية والنسخ الاحتياطي" },
+  tldr: { en: "Critical data is backed up with protected (offline or immutable) copies, and restores are tested.", ar: "تُنسخ البيانات الحرجة احتياطيًا مع نسخ محمية (غير متصلة أو غير قابلة للتعديل) وتُختبر الاستعادة." },
+  refs: [["iso","A.8.13","Information backup"],["csf","PR.DS-11","Backups of data are created, protected, maintained and tested"],["csf","RC.RP-03","Integrity of backups and restoration assets is verified before use"],["s34","Section 3.4","Contingency strategies, including backup and recovery methods"],["iso","A.8.14","Redundancy of information processing facilities"]],
+  q: { en: "How are core banking and customer data backed up, where are copies kept, and when did you last restore from backup successfully?", ar: "كيف تُنسخ بيانات النظام المصرفي الأساسي والعملاء احتياطيًا، وأين تُحفظ النسخ، ومتى كانت آخر استعادة ناجحة؟" },
+  a: { en: ["Review the backup policy: scope, frequency, retention and encryption.","Confirm at least one copy is offline or immutable and out of reach of domain admin credentials.","Obtain evidence of the last restore test and measured recovery time.","Check backups are included in monitoring and failures are alerted."],
+       ar: ["مراجعة سياسة النسخ: النطاق والتكرار والاحتفاظ والتشفير.","التأكد من وجود نسخة واحدة على الأقل غير متصلة أو غير قابلة للتعديل وبعيدة عن بيانات اعتماد مسؤول النطاق.","الحصول على دليل لآخر اختبار استعادة وزمن التعافي المقاس.","التحقق من إدراج النسخ الاحتياطي في المراقبة والتنبيه عند الفشل."] },
+  j: { en: "Backups are the last line of defence against ransomware and corruption. A backup that was never restored is only an assumption.", ar: "النسخ الاحتياطية هي خط الدفاع الأخير ضد الفدية والتلف. نسخة لم تُستعد قط ليست سوى افتراض." } },
+
+{ id: "IR-06", d: "IR", risk: "High", urg: "M13",
+  owner: { en: "COO / Business continuity manager", ar: "مدير العمليات / مدير استمرارية الأعمال" },
+  tldr: { en: "Business continuity and disaster recovery plans define recovery targets and are exercised annually.", ar: "خطط استمرارية الأعمال والتعافي من الكوارث تحدد أهداف التعافي وتُمارَس سنويًا." },
+  refs: [["i22301","8.2","Business impact analysis and risk assessment"],["i22301","8.4","Business continuity plans and procedures"],["i22301","8.5","Exercise programme"],["iso","A.5.29","Information security during disruption"],["iso","A.5.30","ICT readiness for business continuity"],["s34","Section 3","Contingency planning process"],["csf","RC.RP-01","Recovery portion of the incident response plan is executed"]],
+  q: { en: "What are the recovery time and recovery point objectives for core banking, cards, ATMs and mobile banking, and when did you last fail over to the DR site?", ar: "ما أهداف زمن التعافي ونقطة التعافي للنظام المصرفي الأساسي والبطاقات والصرافات والخدمات المصرفية عبر الجوال، ومتى كان آخر تحويل فعلي إلى موقع التعافي؟" },
+  a: { en: ["Obtain the business impact analysis with RTO/RPO per critical service.","Check the DR site capacity and replication match those targets.","Review the last DR test report, issues found and fixes.","Confirm crisis communications and manual fallback procedures for branches."],
+       ar: ["الحصول على تحليل أثر الأعمال مع RTO/RPO لكل خدمة حرجة.","التحقق من أن قدرة موقع التعافي والنسخ المتماثل تطابق هذه الأهداف.","مراجعة تقرير آخر اختبار تعافٍ والمشكلات والإصلاحات.","التأكد من إجراءات الاتصال في الأزمات والبدائل اليدوية للفروع."] },
+  j: { en: "Banks are critical infrastructure. Extended downtime hits customers, liquidity and regulatory standing within hours.", ar: "البنوك بنية تحتية حرجة. التوقف الطويل يضر العملاء والسيولة والمكانة الرقابية خلال ساعات." } },
+
+/* ============ DATA PROTECTION & ENCRYPTION ============ */
+{ id: "DP-01", d: "DP", risk: "Medium", urg: "M13",
+  owner: { en: "Data owners / Information security", ar: "مالكو البيانات / أمن المعلومات" },
+  tldr: { en: "Data is classified and its flows are mapped, so the bank knows where card and customer data lives.", ar: "البيانات مصنّفة وتدفقاتها مرسومة، فيعرف البنك أين توجد بيانات البطاقات والعملاء." },
+  refs: [["iso","A.5.12","Classification of information"],["iso","A.5.13","Labelling of information"],["csf","ID.AM-07","Inventories of data and corresponding metadata are maintained"],["pci","12.5.2","Scope confirmed including all locations where account data is stored, processed or transmitted"]],
+  q: { en: "Do you have a data classification scheme, and can you show where card numbers and customer personal data are stored, processed and sent?", ar: "هل لديكم نظام لتصنيف البيانات، وهل يمكنكم بيان أين تُخزَّن أرقام البطاقات والبيانات الشخصية للعملاء وتُعالَج وتُرسَل؟" },
+  a: { en: ["Obtain the classification policy and a current data-flow diagram.","Run data discovery for card numbers on file shares, databases and email.","Check labels or handling rules are applied to sensitive documents.","Confirm data owners are named for each major data set."],
+       ar: ["الحصول على سياسة التصنيف ومخطط تدفق بيانات حديث.","تشغيل اكتشاف البيانات لأرقام البطاقات في مشاركات الملفات وقواعد البيانات والبريد.","التأكد من تطبيق وسوم أو قواعد تعامل على المستندات الحساسة.","التأكد من تسمية مالكي البيانات لكل مجموعة بيانات رئيسية."] },
+  j: { en: "Protection starts with knowing where sensitive data is. Unknown copies are unprotected copies.", ar: "تبدأ الحماية بمعرفة أين توجد البيانات الحساسة. النسخ المجهولة هي نسخ غير محمية." } },
+
+{ id: "DP-02", d: "DP", risk: "High", urg: "IMM",
+  owner: { en: "Card systems owner / DBA", ar: "مالك أنظمة البطاقات / مدير قواعد البيانات" },
+  tldr: { en: "Stored card numbers are unreadable and sensitive authentication data is never kept after authorisation.", ar: "أرقام البطاقات المخزنة غير مقروءة وبيانات المصادقة الحساسة لا تُحفظ بعد التفويض." },
+  refs: [["pci","3.3.1","Sensitive authentication data is not retained after authorisation"],["pci","3.5.1","PAN is rendered unreadable anywhere it is stored"],["iso","A.8.24","Use of cryptography"],["csf","PR.DS-01","The confidentiality, integrity and availability of data-at-rest are protected"]],
+  q: { en: "Where is the full card number (PAN) stored, how is it protected, and can you confirm CVV/CVC and PIN data are never stored after authorisation?", ar: "أين يُخزَّن رقم البطاقة الكامل (PAN) وكيف يُحمى، وهل تؤكدون عدم حفظ CVV/CVC وبيانات PIN بعد التفويض؟" },
+  a: { en: ["Review database and file encryption or tokenisation for PAN storage.","Search logs, dumps and test data for full track data, CVV or PIN blocks.","Verify access to decrypted PAN is limited to named roles and logged.","Confirm test environments use masked or synthetic data."],
+       ar: ["مراجعة تشفير أو ترميز (tokenisation) قواعد البيانات والملفات لتخزين PAN.","البحث في السجلات والنسخ ومعلومات الاختبار عن بيانات المسار الكاملة أو CVV أو PIN.","التحقق من حصر الوصول إلى PAN غير المشفر بأدوار مسماة وتسجيله.","التأكد من أن بيئات الاختبار تستخدم بيانات مقنّعة أو اصطناعية."] },
+  j: { en: "Stored card data is what thieves are after. Storing authentication data after approval is prohibited and multiplies breach impact.", ar: "بيانات البطاقات المخزنة هي هدف اللصوص. تخزين بيانات المصادقة بعد الموافقة محظور ويضاعف أثر الاختراق." } },
+
+{ id: "DP-03", d: "DP", risk: "High", urg: "W12",
+  owner: { en: "Network & application security", ar: "أمن الشبكات والتطبيقات" },
+  tldr: { en: "Sensitive data in transit is protected with strong, current TLS and managed certificates.", ar: "البيانات الحساسة أثناء النقل محمية بـ TLS حديث وقوي وبشهادات مُدارة." },
+  refs: [["pci","4.2.1","Strong cryptography protects PAN during transmission over open, public networks"],["pci","4.2.1.1","Inventory of trusted keys and certificates is maintained"],["s52","Section 3","Minimum requirements for TLS servers"],["swift","2.1","Internal data flow security"],["iso","A.8.24","Use of cryptography"],["csf","PR.DS-02","The confidentiality, integrity and availability of data-in-transit are protected"]],
+  q: { en: "Which TLS versions and ciphers are allowed on online banking, APIs and internal payment flows, and how are certificates tracked and renewed?", ar: "ما إصدارات TLS والشفرات المسموحة في الخدمات المصرفية الإلكترونية وواجهات البرمجة وتدفقات الدفع الداخلية، وكيف تُتتبع الشهادات وتُجدَّد؟" },
+  a: { en: ["Scan public endpoints with a TLS testing tool and confirm old protocols (SSL, TLS 1.0/1.1) are disabled.","Check internal links between payment components are also encrypted.","Review the certificate inventory with owners and expiry dates.","Confirm email or file transfers of sensitive data use encrypted channels."],
+       ar: ["فحص النقاط العامة بأداة اختبار TLS والتأكد من تعطيل البروتوكولات القديمة (SSL وTLS 1.0/1.1).","التأكد من تشفير الروابط الداخلية بين مكونات الدفع أيضًا.","مراجعة جرد الشهادات مع المالكين وتواريخ الانتهاء.","التأكد من استخدام قنوات مشفرة لنقل البيانات الحساسة بالبريد أو الملفات."] },
+  j: { en: "Unencrypted or weakly encrypted traffic can be read or altered by anyone on the path, exposing credentials and transactions.", ar: "المرور غير المشفر أو ضعيف التشفير يمكن لأي طرف في المسار قراءته أو تعديله، مما يكشف بيانات الدخول والمعاملات." } },
+
+{ id: "DP-04", d: "DP", risk: "High", urg: "M13",
+  owner: { en: "Cryptography / HSM custodians", ar: "التشفير / أمناء وحدات HSM" },
+  tldr: { en: "Cryptographic keys are generated, stored, rotated and retired under documented control, preferably in HSMs.", ar: "مفاتيح التشفير تُولَّد وتُخزَّن وتُدوَّر وتُسحب وفق ضوابط موثقة، ويفضل في وحدات HSM." },
+  refs: [["pci","3.6.1","Procedures protect cryptographic keys used to protect stored account data"],["pci","3.7.1","Key-management policies cover secure generation of strong keys"],["pci","3.7.4","Key changes at the end of the defined cryptoperiod"],["s57","Section 5.3","Cryptoperiods for keys"],["iso","A.8.24","Use of cryptography"],["csf","PR.DS-01","Data-at-rest is protected"]],
+  q: { en: "Who holds the keys that protect card data, where are they stored, and how often are they rotated?", ar: "من يحتفظ بالمفاتيح التي تحمي بيانات البطاقات، وأين تُخزَّن، وكم مرة تُدوَّر؟" },
+  a: { en: ["Obtain the key-management policy and key inventory with cryptoperiods.","Confirm use of HSMs and split knowledge / dual control for manual key operations.","Check key custodians have signed responsibility forms.","Verify procedures for key compromise and for retiring old keys."],
+       ar: ["الحصول على سياسة إدارة المفاتيح وجرد المفاتيح مع فترات استخدامها.","التأكد من استخدام HSM ومعرفة مجزأة / رقابة مزدوجة للعمليات اليدوية على المفاتيح.","التحقق من توقيع أمناء المفاتيح على إقرارات المسؤولية.","التحقق من إجراءات التعامل مع اختراق المفتاح وسحب المفاتيح القديمة."] },
+  j: { en: "Encryption is only as strong as key control. If keys leak, the encryption provides no protection at all.", ar: "قوة التشفير من قوة ضبط المفاتيح. إذا تسربت المفاتيح فلا حماية من التشفير على الإطلاق." } },
+
+{ id: "DP-05", d: "DP", risk: "Medium", urg: "M13",
+  owner: { en: "Information security / Application owners", ar: "أمن المعلومات / مالكو التطبيقات" },
+  tldr: { en: "Card numbers are masked on screens and data leaving the bank is monitored by data-loss prevention.", ar: "أرقام البطاقات مقنّعة على الشاشات والبيانات الخارجة من البنك مراقبة بنظام منع تسرب البيانات." },
+  refs: [["pci","3.4.1","PAN is masked when displayed (at most first six and last four digits)"],["iso","A.8.11","Data masking"],["iso","A.8.12","Data leakage prevention"],["csf","PR.DS-01","Data-at-rest is protected"],["csf","PR.DS-02","Data-in-transit is protected"]],
+  q: { en: "What do tellers and call-centre agents see when they open a customer card record, and how do you detect large exports of customer data?", ar: "ماذا يرى الصرافون وموظفو مركز الاتصال عند فتح سجل بطاقة عميل، وكيف تكتشفون تصدير كميات كبيرة من بيانات العملاء؟" },
+  a: { en: ["View screens, reports and exports to confirm only permitted digits are shown.","Check DLP rules on email, web uploads, USB and cloud storage.","Review alerts for bulk downloads and how they are handled.","Confirm users who see full PAN have a documented business need."],
+       ar: ["معاينة الشاشات والتقارير والتصديرات للتأكد من إظهار الأرقام المسموحة فقط.","فحص قواعد DLP على البريد ورفع الويب وUSB والتخزين السحابي.","مراجعة تنبيهات التنزيل الجماعي وكيفية معالجتها.","التأكد من أن من يرى PAN كاملًا لديه حاجة عمل موثقة."] },
+  j: { en: "Insiders and malware can leak data quietly. Masking and DLP reduce what can be seen and stolen in everyday work.", ar: "قد يسرّب الموظفون والبرمجيات الخبيثة البيانات بصمت. التقنيع وDLP يقللان ما يمكن رؤيته وسرقته في العمل اليومي." } },
+
+{ id: "DP-06", d: "DP", risk: "Medium", urg: "M36",
+  owner: { en: "Data Protection Officer / Legal & Compliance", ar: "مسؤول حماية البيانات / الشؤون القانونية والامتثال" },
+  tldr: { en: "Personal-data obligations, retention periods and secure disposal are defined and followed.", ar: "التزامات البيانات الشخصية وفترات الاحتفاظ والإتلاف الآمن محددة ومطبّقة." },
+  refs: [["pdpl","Whole law","Egyptian Personal Data Protection Law (no article cited — confirm text before the session)"],["iso","A.5.34","Privacy and protection of personally identifiable information"],["iso","A.8.10","Information deletion"],["pci","3.2.1","Account data storage is kept to a minimum through retention and disposal policies"],["csf","GV.OC-03","Legal, regulatory and contractual requirements are understood and managed"]],
+  q: { en: "Who is responsible for personal-data compliance, how long do you keep customer and card data, and how is it securely deleted?", ar: "من المسؤول عن الامتثال للبيانات الشخصية، وكم تحتفظون ببيانات العملاء والبطاقات، وكيف تُحذف بأمان؟" },
+  a: { en: ["Obtain the data retention schedule and the record of processing activities.","Verify a responsible person (DPO or equivalent) is appointed and customers can exercise data rights.","Test that expired data is purged from production, backups and archives.","Check secure disposal certificates for retired media and devices."],
+       ar: ["الحصول على جدول الاحتفاظ بالبيانات وسجل أنشطة المعالجة.","التحقق من تعيين مسؤول (DPO أو ما يعادله) وإمكانية ممارسة العملاء لحقوقهم.","اختبار حذف البيانات المنتهية من الإنتاج والنسخ الاحتياطية والأرشيف.","فحص شهادات الإتلاف الآمن للوسائط والأجهزة المسحوبة."] },
+  j: { en: "Keeping data longer than needed raises breach impact and creates legal exposure under data protection law.", ar: "الاحتفاظ بالبيانات أطول من اللازم يزيد أثر الاختراق ويخلق مخاطر قانونية بموجب قانون حماية البيانات." } },
+
+/* ============ VENDOR & SUPPLY CHAIN ============ */
+{ id: "VS-01", d: "VS", risk: "High", urg: "M13",
+  owner: { en: "Procurement / Vendor risk manager", ar: "المشتريات / مدير مخاطر الموردين" },
+  tldr: { en: "All third-party service providers are listed, tiered by criticality, and their data access is known.", ar: "جميع مزودي الخدمة من الأطراف الثالثة مدرجون ومصنفون حسب الأهمية ووصولهم إلى البيانات معروف." },
+  refs: [["pci","12.8.1","A list of all third-party service providers (TPSPs), with a description of services provided, is maintained"],["iso","A.5.19","Information security in supplier relationships"],["csf","GV.SC-04","Suppliers are known and prioritized by criticality"]],
+  q: { en: "Can you give me the list of vendors that process card data, host systems, or have remote access to the bank, and how they are ranked by risk?", ar: "هل يمكنكم تزويدي بقائمة الموردين الذين يعالجون بيانات البطاقات أو يستضيفون أنظمة أو لديهم وصول عن بُعد إلى البنك، وكيف يصنفون حسب المخاطر؟" },
+  a: { en: ["Obtain the vendor register; cross-check with accounts payable and VPN/remote-access logs for unlisted vendors.","Confirm each vendor has a criticality tier, data types handled and business owner.","Include fintech partners, cloud providers, ATM and card-processing service providers.","Review the register at least annually."],
+       ar: ["الحصول على سجل الموردين ومقارنته بحسابات الدائنين وسجلات الوصول عن بُعد لاكتشاف موردين غير مدرجين.","التأكد من أن لكل مورد مستوى أهمية وأنواع بيانات يتعامل معها ومالكًا تجاريًا.","تضمين شركاء التقنية المالية ومزودي السحابة ومزودي خدمات الصرافات ومعالجة البطاقات.","مراجعة السجل سنويًا على الأقل."] },
+  j: { en: "A breach at a supplier is a breach of the bank's customers. You cannot manage supplier risk without a complete list.", ar: "اختراق لدى مورد هو اختراق لعملاء البنك. لا يمكن إدارة مخاطر الموردين دون قائمة كاملة." } },
+
+{ id: "VS-02", d: "VS", risk: "High", urg: "M13",
+  owner: { en: "Vendor risk manager / Information security", ar: "مدير مخاطر الموردين / أمن المعلومات" },
+  tldr: { en: "Security due diligence is completed before a vendor is engaged.", ar: "يُنفَّذ تقييم العناية الواجبة الأمنية قبل التعاقد مع المورد." },
+  refs: [["pci","12.8.3","An established process for engaging TPSPs, including proper due diligence prior to engagement"],["iso","A.5.19","Information security in supplier relationships"],["iso","A.5.21","Managing information security in the ICT supply chain"],["csf","GV.SC-06","Planning and due diligence are performed to reduce risks before entering supplier relationships"]],
+  q: { en: "What security checks must a new vendor pass before they receive data or access, and can I see an example from the last vendor you onboarded?", ar: "ما الفحوصات الأمنية التي يجب أن يجتازها المورد الجديد قبل حصوله على بيانات أو وصول، وهل يمكنني رؤية مثال من آخر مورد أُدخل؟" },
+  a: { en: ["Obtain the onboarding process and security questionnaire template.","Review one completed assessment for a critical vendor, with evidence such as ISO 27001 or SOC 2 reports and PCI Attestation of Compliance.","Check findings are risk-rated and approved before contract signature.","Confirm information security has veto authority on high-risk vendors."],
+       ar: ["الحصول على إجراءات الإدخال ونموذج الاستبيان الأمني.","مراجعة تقييم مكتمل لمورد حرج مع أدلة مثل ISO 27001 أو تقارير SOC 2 وشهادة امتثال PCI.","التأكد من تصنيف النتائج حسب المخاطر واعتمادها قبل توقيع العقد.","التأكد من أن أمن المعلومات يملك حق الاعتراض على الموردين عالي المخاطر."] },
+  j: { en: "Finding weaknesses before signing is far cheaper than after the vendor already holds your data.", ar: "اكتشاف نقاط الضعف قبل التوقيع أرخص بكثير من اكتشافها بعد أن يصبح المورد حائزًا لبياناتكم." } },
+
+{ id: "VS-03", d: "VS", risk: "High", urg: "M13",
+  owner: { en: "Legal / Procurement / CISO", ar: "الشؤون القانونية / المشتريات / مدير أمن المعلومات" },
+  tldr: { en: "Contracts require security controls, incident notification, audit rights and data return or deletion.", ar: "تشترط العقود ضوابط أمنية وإخطارًا بالحوادث وحقوق تدقيق وإعادة البيانات أو حذفها." },
+  refs: [["pci","12.8.2","Written agreements with TPSPs include acknowledgement of responsibility for account data security"],["iso","A.5.20","Addressing information security within supplier agreements"],["csf","GV.SC-05","Cybersecurity requirements for suppliers are established, prioritized and integrated into contracts"]],
+  q: { en: "Do your vendor contracts oblige suppliers to report incidents promptly, allow you to audit them, and require return or deletion of data at exit?", ar: "هل تُلزم عقود الموردين بالإبلاغ الفوري عن الحوادث وتتيح لكم تدقيقهم وتشترط إعادة البيانات أو حذفها عند الخروج؟" },
+  a: { en: ["Review 3 critical vendor contracts for security clauses, notification timelines and audit rights.","Check for PCI DSS responsibility acknowledgement for card-data vendors.","Confirm sub-contractor (fourth party) flow-down clauses.","Identify contracts without security terms and plan amendments."],
+       ar: ["مراجعة 3 عقود لموردين حرجين بحثًا عن بنود الأمن ومهل الإخطار وحقوق التدقيق.","التحقق من إقرار مسؤولية PCI DSS لدى موردي بيانات البطاقات.","التأكد من تمرير الالتزامات إلى المقاولين من الباطن (الطرف الرابع).","تحديد العقود التي تخلو من شروط الأمن وتخطيط تعديلها."] },
+  j: { en: "Without contract terms you cannot require a vendor to fix problems or even to tell you about a breach.", ar: "بدون بنود تعاقدية لا يمكنك إلزام المورد بإصلاح المشكلات ولا حتى بإبلاغك عن اختراق." } },
+
+{ id: "VS-04", d: "VS", risk: "Medium", urg: "M13",
+  owner: { en: "Vendor risk manager", ar: "مدير مخاطر الموردين" },
+  tldr: { en: "Vendor security and PCI compliance status are monitored at least annually, with responsibilities documented.", ar: "يُراقَب وضع أمن الموردين والامتثال لـ PCI سنويًا على الأقل مع توثيق المسؤوليات." },
+  refs: [["pci","12.8.4","A program monitors TPSPs' PCI DSS compliance status at least once every 12 months"],["pci","12.8.5","Information on which PCI DSS requirements are managed by each TPSP and by the entity is maintained"],["iso","A.5.22","Monitoring, review and change management of supplier services"],["csf","GV.SC-07","Supplier risks are understood, recorded, prioritized, assessed, responded to and monitored"]],
+  q: { en: "How do you check that critical vendors stay compliant after onboarding, and who is responsible for each security requirement, you or the vendor?", ar: "كيف تتحققون من استمرار امتثال الموردين الحرجين بعد الإدخال، ومن المسؤول عن كل متطلب أمني: أنتم أم المورد؟" },
+  a: { en: ["Collect current certificates and reports (PCI AOC, SOC 2, ISO 27001) with expiry dates.","Review the responsibility matrix showing who owns each control.","Check periodic reviews, service reports and corrective actions are recorded.","Escalate vendors whose evidence has expired."],
+       ar: ["جمع الشهادات والتقارير الحالية (PCI AOC وSOC 2 وISO 27001) مع تواريخ انتهائها.","مراجعة مصفوفة المسؤوليات التي تبين مالك كل ضابط.","التأكد من تسجيل المراجعات الدورية وتقارير الخدمة والإجراءات التصحيحية.","تصعيد الموردين الذين انتهت أدلتهم."] },
+  j: { en: "Vendor security changes over time. Annual evidence checks catch lapses before they become incidents.", ar: "أمن المورد يتغير مع الزمن. التحقق السنوي من الأدلة يلتقط الإخفاقات قبل أن تصبح حوادث." } },
+
+{ id: "VS-05", d: "VS", risk: "High", urg: "M13",
+  owner: { en: "CIO / Vendor risk manager", ar: "مدير تقنية المعلومات / مدير مخاطر الموردين" },
+  tldr: { en: "Outsourced critical activities and cloud services have defined security responsibilities and oversight.", ar: "الأنشطة الحرجة المُسنَدة لجهات خارجية والخدمات السحابية لها مسؤوليات أمنية محددة ورقابة." },
+  refs: [["swift","2.8","Critical activity outsourcing"],["iso","A.5.23","Information security for use of cloud services"],["csf","GV.SC-09","Supply chain security practices are integrated into cybersecurity and risk management programs and monitored"],["cbe","Outsourcing / vendor management","Framework function covering outsourcing and third-party management (confirm the clause in the official framework)"]],
+  q: { en: "Which critical bank functions (SWIFT service bureau, card processing, cloud hosting, SOC) are outsourced, and how do you oversee their security?", ar: "ما الوظائف الحرجة في البنك المُسنَدة لجهات خارجية (مكتب خدمات سويفت، معالجة البطاقات، الاستضافة السحابية، مركز العمليات الأمنية)، وكيف تشرفون على أمنها؟" },
+  a: { en: ["List outsourced critical activities and the independent assurance obtained (reports or audits).","Confirm the shared-responsibility model for each cloud service is documented and configuration is monitored.","Check regulator notification or approval was obtained where required.","Verify exit and contingency arrangements exist."],
+       ar: ["حصر الأنشطة الحرجة المُسنَدة والضمان المستقل المتحصَّل عليه (تقارير أو تدقيقات).","التأكد من توثيق نموذج المسؤولية المشتركة لكل خدمة سحابية ومراقبة الإعدادات.","التحقق من الحصول على إخطار أو موافقة الجهة الرقابية عند الاقتضاء.","التحقق من وجود ترتيبات الخروج والطوارئ."] },
+  j: { en: "Outsourcing moves the work, not the accountability. The bank remains answerable to regulators and customers for what its providers do.", ar: "الإسناد الخارجي ينقل العمل لا المسؤولية. يبقى البنك مساءلًا أمام الجهات الرقابية والعملاء عما يفعله مزودوه." } },
+
+{ id: "VS-06", d: "VS", risk: "Medium", urg: "M36",
+  owner: { en: "Procurement / Application owners", ar: "المشتريات / مالكو التطبيقات" },
+  tldr: { en: "Software supply chain integrity and vendor exit plans are managed.", ar: "تُدار سلامة سلسلة إمداد البرمجيات وخطط الخروج من الموردين." },
+  refs: [["swift","6.2","Software integrity"],["pci","6.3.2","Inventory of bespoke, custom and third-party software components is maintained"],["iso","A.5.21","Managing information security in the ICT supply chain"],["csf","GV.SC-10","Supply chain risk management plans include provisions for activities after the end of a partnership or service agreement"]],
+  q: { en: "How do you verify vendor software and updates before installing them, and what is the plan if a critical supplier fails or is compromised?", ar: "كيف تتحققون من برمجيات وتحديثات الموردين قبل تثبيتها، وما الخطة إذا فشل مورد حرج أو تعرض للاختراق؟" },
+  a: { en: ["Check integrity verification (signatures or hashes) for software and updates.","Obtain the inventory of third-party components in key applications.","Review exit plans and alternative suppliers for critical services.","Confirm access and data are removed within a defined time when a contract ends."],
+       ar: ["فحص التحقق من السلامة (التوقيعات أو البصمات) للبرمجيات والتحديثات.","الحصول على جرد المكونات الخارجية في التطبيقات الرئيسية.","مراجعة خطط الخروج والموردين البدلاء للخدمات الحرجة.","التأكد من إزالة الوصول والبيانات خلال مدة محددة عند انتهاء العقد."] },
+  j: { en: "Attackers increasingly compromise trusted vendors and update channels to reach many banks at once.", ar: "يخترق المهاجمون بشكل متزايد الموردين الموثوقين وقنوات التحديث للوصول إلى بنوك عديدة دفعة واحدة." } }
+  ]
+};
+
+
+(function(){
+"use strict";
+var D = window.DATA;
+var LANG = "en";
+var STATE = {}; // id -> {s:'todo'|'ok'|'gap', n:''}
+var VIEW = "list";
+
+try{ var sv=localStorage.getItem("auditState_v1"); if(sv) STATE=JSON.parse(sv)||{}; var sl=localStorage.getItem("auditLang_v1"); if(sl==="ar"||sl==="en") LANG=sl; }catch(e){}
+function persist(){ try{ localStorage.setItem("auditState_v1",JSON.stringify(STATE)); localStorage.setItem("auditLang_v1",LANG);}catch(e){} }
+
+var T = {
+  en:{
+    title:"Bank Cybersecurity Audit Checklist", course:"BINF 711 Cybersecurity Audit Project · Winter 2026",
+    list:"Checklist", rep:"Prioritized action list", about:"About & standards",
+    search:"Search items, standards, controls…", allD:"All domains", allR:"All risk levels", allS:"All statuses",
+    hide:"Hide completed items", showing:function(a,b){return "Showing "+a+" of "+b+" items";},
+    todo:"Not yet asked", ok:"Satisfied", gap:"Gap", markTodo:"Not yet asked", markOk:"Mark satisfied", markGap:"Record gap",
+    risk:"Risk", urg:"Urgency", owner:"Owner",
+    q:"Audit question", acts:"Associated action items", just:"Justification", stds:"Standards & controls", notes:"Findings / client response",
+    noitems:"No items match the filters. If completed items are hidden, switch the toggle off to see them.",
+    High:"High",Medium:"Medium",Low:"Low",
+    IMM:"Immediate (≤ 1 week)", W12:"1–2 weeks", M13:"1–3 months", M36:"3–6 months",
+    IMMs:"Immediate", W12s:"1–2 wk", M13s:"1–3 mo", M36s:"3–6 mo",
+    pAsked:"Assessed", pOk:"Satisfied", pGap:"Gaps", pOpen:"Unresolved",
+    repH:"Prioritized list of unresolved action items", repP:"Highest priority first. Items marked satisfied are excluded.",
+    method:"Priority score = risk weight (High 3, Medium 2, Low 1) × urgency weight (Immediate 4, 1–2 weeks 3, 1–3 months 2, 3–6 months 1). Ties are ordered by risk, then by checklist ID.",
+    gapsOnly:"Show only items recorded as gaps (exclude items not yet asked)", copy:"Copy as text", csv:"Copy as CSV", copied:"Copied to clipboard",
+    cRank:"#",cId:"Item",cSc:"Score",cRisk:"Risk / urgency",cOwn:"Owner",cAct:"Action items",cStd:"Standards",
+    none:"No unresolved items. Everything assessed is marked satisfied.",
+    open:"Open", close:"Close", viewSrc:"Open official source", ctrl:"Control", reqLbl:"What it requires (paraphrase)",
+    verify:"Paraphrased for navigation. Read the exact wording in the official document before quoting it.",
+    nolink:"No official link is bundled for this source.",
+    foot:"Educational audit checklist built for a university course. The client organisation is fictional. Control titles are short paraphrases; always verify exact clause text in the official standard.",
+    sev:"Severity"
+  },
+  ar:{
+    title:"قائمة تدقيق الأمن السيبراني للبنوك", course:"مشروع تدقيق الأمن السيبراني BINF 711 · شتاء 2026",
+    list:"قائمة التدقيق", rep:"قائمة الإجراءات حسب الأولوية", about:"حول القائمة والمعايير",
+    search:"ابحث في البنود والمعايير والضوابط…", allD:"كل المجالات", allR:"كل مستويات الخطورة", allS:"كل الحالات",
+    hide:"إخفاء البنود المكتملة", showing:function(a,b){return "عرض "+a+" من "+b+" بندًا";},
+    todo:"لم يُسأل بعد", ok:"مستوفى", gap:"فجوة", markTodo:"لم يُسأل بعد", markOk:"تحديد كمستوفى", markGap:"تسجيل فجوة",
+    risk:"الخطورة", urg:"الاستعجال", owner:"المسؤول",
+    q:"سؤال التدقيق", acts:"الإجراءات المرتبطة", just:"التبرير", stds:"المعايير والضوابط", notes:"النتائج / رد العميل",
+    noitems:"لا توجد بنود مطابقة. إذا كانت البنود المكتملة مخفية فأوقف خيار الإخفاء لعرضها.",
+    High:"عالية",Medium:"متوسطة",Low:"منخفضة",
+    IMM:"فوري (خلال أسبوع)", W12:"1–2 أسبوع", M13:"1–3 أشهر", M36:"3–6 أشهر",
+    IMMs:"فوري", W12s:"1–2 أسبوع", M13s:"1–3 أشهر", M36s:"3–6 أشهر",
+    pAsked:"تم تقييمها", pOk:"مستوفاة", pGap:"فجوات", pOpen:"غير محسومة",
+    repH:"قائمة مرتبة بالأولوية للإجراءات غير المحسومة", repP:"الأعلى أولوية أولًا. البنود المحددة كمستوفاة مستبعدة.",
+    method:"درجة الأولوية = وزن الخطورة (عالية 3، متوسطة 2، منخفضة 1) × وزن الاستعجال (فوري 4، 1–2 أسبوع 3، 1–3 أشهر 2، 3–6 أشهر 1). عند التساوي يُرتَّب حسب الخطورة ثم رقم البند.",
+    gapsOnly:"عرض البنود المسجلة كفجوات فقط (استبعاد ما لم يُسأل بعد)", copy:"نسخ كنص", csv:"نسخ بصيغة CSV", copied:"تم النسخ",
+    cRank:"#",cId:"البند",cSc:"الدرجة",cRisk:"الخطورة / الاستعجال",cOwn:"المسؤول",cAct:"الإجراءات",cStd:"المعايير",
+    none:"لا توجد بنود غير محسومة. كل ما تم تقييمه مستوفى.",
+    open:"فتح", close:"إغلاق", viewSrc:"فتح المصدر الرسمي", ctrl:"الضابط", reqLbl:"ما يتطلبه (صياغة مختصرة)",
+    verify:"الصياغة مختصرة للتوجيه فقط. اقرأ النص الدقيق في الوثيقة الرسمية قبل الاقتباس منه.",
+    nolink:"لا يوجد رابط رسمي مرفق لهذا المصدر.",
+    foot:"قائمة تدقيق تعليمية أُعدت لمقرر جامعي. المؤسسة العميلة افتراضية. عناوين الضوابط صياغات مختصرة؛ تحقق دائمًا من نص البند الدقيق في المعيار الرسمي. تبقى أرقام الضوابط وأسماء المعايير بالإنجليزية كما وردت في مصادرها.",
+    sev:"الخطورة"
+  }
+};
+var RW={High:3,Medium:2,Low:1}, UW={IMM:4,W12:3,M13:2,M36:1};
+function t(k){ var v=T[LANG][k]; return v===undefined?T.en[k]:v; }
+function L(o){ return (o && (o[LANG]||o.en))||""; }
+function $(id){ return document.getElementById(id); }
+function esc(s){ return String(s).replace(/[&<>"']/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c];}); }
+function st(id){ return (STATE[id]&&STATE[id].s)||"todo"; }
+function score(it){ return RW[it.risk]*UW[it.urg]; }
+function itemById(id){ for(var i=0;i<D.items.length;i++) if(D.items[i].id===id) return D.items[i]; }
+function domName(id){ for(var i=0;i<D.domains.length;i++) if(D.domains[i].id===id) return L(D.domains[i]); }
+
+/* ---------- static text ---------- */
+function paintChrome(){
+  document.documentElement.lang=LANG; document.documentElement.dir=LANG==="ar"?"rtl":"ltr";
+  $("t-title").textContent=t("title"); $("t-client").textContent=L(D.client); $("t-course").textContent=t("course");
+  $("l-en").setAttribute("aria-pressed",LANG==="en"); $("l-ar").setAttribute("aria-pressed",LANG==="ar");
+  $("tab-list").textContent=t("list"); $("tab-rep").textContent=t("rep"); $("tab-about").textContent=t("about");
+  $("f-q").placeholder=t("search"); $("f-q").setAttribute("aria-label",t("search"));
+  fillSelect("f-d",[["",t("allD")]].concat(D.domains.map(function(d){return [d.id,d.id+" · "+L(d)];})));
+  fillSelect("f-r",[["",t("allR")],["High",t("High")],["Medium",t("Medium")],["Low",t("Low")]]);
+  fillSelect("f-s",[["",t("allS")],["todo",t("todo")],["ok",t("ok")],["gap",t("gap")]]);
+  $("t-hide").textContent=t("hide");
+  $("t-rep-h").textContent=t("repH"); $("t-rep-p").textContent=t("repP"); $("t-method").textContent=t("method");
+  $("t-gaps").textContent=t("gapsOnly"); $("b-copy").textContent=t("copy"); $("b-csv").textContent=t("csv");
+  $("t-foot").textContent=t("foot");
+  document.title=t("title")+" — BINF 711";
+}
+var fsel={d:"",r:"",s:""};
+function fillSelect(id,opts){
+  var el=$(id), cur=el.value; el.innerHTML="";
+  opts.forEach(function(o){ var op=document.createElement("option"); op.value=o[0]; op.textContent=o[1]; el.appendChild(op); });
+  el.value=cur;
+}
+
+/* ---------- progress ---------- */
+function paintProgress(){
+  var n=D.items.length, ok=0, gap=0;
+  D.items.forEach(function(it){ var s=st(it.id); if(s==="ok")ok++; else if(s==="gap")gap++; });
+  var asked=ok+gap, open=n-ok;
+  $("progress").innerHTML=
+    stat(asked+" / "+n,t("pAsked"))+stat(ok,t("pOk"))+stat(gap,t("pGap"))+stat(open,t("pOpen"));
+  $("barfill").style.width=(n?Math.round(asked/n*100):0)+"%";
+}
+function stat(v,l){ return '<div class="stat"><b dir="ltr" style="text-align:start">'+esc(v)+'</b><span>'+esc(l)+'</span></div>'; }
+
+/* ---------- checklist ---------- */
+function matches(it){
+  var q=$("f-q").value.trim().toLowerCase();
+  var d=$("f-d").value, r=$("f-r").value, s=$("f-s").value;
+  if(d && it.d!==d) return false;
+  if(r && it.risk!==r) return false;
+  if(s && st(it.id)!==s) return false;
+  if($("f-hide").checked && st(it.id)==="ok" && s!=="ok") return false;
+  if(q){
+    var hay=[it.id,L(it.tldr),it.tldr.en,L(it.q),it.q.en,L(it.owner)].concat(it.refs.map(function(r){return D.standards[r[0]].name+" "+r[1]+" "+r[2];})).join(" ").toLowerCase();
+    if(hay.indexOf(q)<0) return false;
+  }
+  return true;
+}
+var OPEN={};
+function paintList(){
+  var out=[], shown=0;
+  D.domains.forEach(function(dm){
+    var items=D.items.filter(function(it){return it.d===dm.id && matches(it);});
+    if(!items.length) return;
+    shown+=items.length;
+    out.push('<div class="domain"><h2>'+esc(dm.id)+' · '+esc(L(dm))+'</h2><p>'+esc(LANG==="ar"?dm.da:dm.de)+'</p></div>');
+    items.forEach(function(it){ out.push(cardHTML(it)); });
+  });
+  $("list").innerHTML = out.length? out.join("") : '<div class="empty">'+esc(t("noitems"))+'</div>';
+  $("count").textContent=t("showing")(shown,D.items.length);
+}
+function cardHTML(it){
+  var s=st(it.id), n=(STATE[it.id]&&STATE[it.id].n)||"";
+  var cls="card r-"+it.risk+(s==="ok"?" done":"")+(s==="gap"?" gap":"");
+  var acts=(it.a[LANG]||it.a.en).map(function(a){return "<li>"+esc(a)+"</li>";}).join("");
+  var chips=it.refs.map(function(r,i){
+    return '<button class="chip" data-ref="'+esc(it.id)+':'+i+'"><b>'+esc(D.standards[r[0]].name)+'</b> '+esc(r[1])+'</button>';
+  }).join("");
+  return '<details class="'+cls+'" id="c-'+it.id+'"'+(OPEN[it.id]?" open":"")+' data-id="'+it.id+'">'+
+    '<summary><span class="cid">'+it.id+'</span><div><div class="tl">'+esc(L(it.tldr))+'</div>'+
+    '<div class="badges"><span class="badge b-'+it.risk+'">'+esc(t("risk"))+': '+esc(t(it.risk))+'</span>'+
+    '<span class="badge b-urg">'+esc(t("urg"))+': '+esc(t(it.urg))+'</span>'+
+    '<span class="badge b-own">'+esc(t("owner"))+': '+esc(L(it.owner))+'</span></div></div>'+
+    '<span class="st st-'+s+'">'+esc(t(s))+'</span></summary>'+
+    '<div class="body">'+
+    '<div class="lbl">'+esc(t("q"))+'</div><div class="q">'+esc(L(it.q))+'</div>'+
+    '<div class="lbl">'+esc(t("acts"))+'</div><ul>'+acts+'</ul>'+
+    '<div class="lbl">'+esc(t("just"))+'</div><div>'+esc(L(it.j))+'</div>'+
+    '<div class="lbl">'+esc(t("stds"))+'</div><div class="chips">'+chips+'</div>'+
+    '<div class="actions" role="group" aria-label="Status">'+
+      '<button class="stbtn s-ok" data-set="ok:'+it.id+'" aria-pressed="'+(s==="ok")+'">✓ '+esc(t("markOk"))+'</button>'+
+      '<button class="stbtn s-gap" data-set="gap:'+it.id+'" aria-pressed="'+(s==="gap")+'">✗ '+esc(t("markGap"))+'</button>'+
+      '<button class="stbtn s-todo" data-set="todo:'+it.id+'" aria-pressed="'+(s==="todo")+'">'+esc(t("markTodo"))+'</button></div>'+
+    '<textarea class="note" data-note="'+it.id+'" placeholder="'+esc(t("notes"))+'" aria-label="'+esc(t("notes"))+'">'+esc(n)+'</textarea>'+
+    '</div></details>';
+}
+
+/* ---------- report ---------- */
+function unresolved(){
+  var gapsOnly=$("r-gaps").checked;
+  return D.items.filter(function(it){ var s=st(it.id); return gapsOnly? s==="gap" : s!=="ok"; })
+    .sort(function(a,b){ return score(b)-score(a) || RW[b.risk]-RW[a.risk] || (a.id<b.id?-1:1); });
+}
+function refStr(it){ return it.refs.map(function(r){return D.standards[r[0]].name+" "+r[1];}).join("; "); }
+function paintReport(){
+  var rows=unresolved();
+  if(!rows.length){ $("rep-out").innerHTML='<div class="empty">'+esc(t("none"))+'</div>'; return; }
+  var h='<table class="rep"><thead><tr><th>'+t("cRank")+'</th><th>'+t("cId")+'</th><th>'+t("cSc")+'</th><th>'+t("cRisk")+'</th><th>'+t("cOwn")+'</th><th>'+t("cAct")+'</th></tr></thead><tbody>';
+  rows.forEach(function(it,i){
+    var acts=(it.a[LANG]||it.a.en).slice(0,3).map(function(a){return "<li>"+esc(a)+"</li>";}).join("");
+    var note=(STATE[it.id]&&STATE[it.id].n)?'<div style="margin-top:6px;color:var(--muted)">'+esc(STATE[it.id].n)+'</div>':"";
+    h+='<tr><td class="rk">'+(i+1)+'</td><td><b>'+it.id+'</b> · '+esc(domName(it.d))+'<div>'+esc(L(it.tldr))+'</div>'+
+      '<div style="margin-top:4px;direction:ltr;text-align:start;unicode-bidi:isolate;font-size:12.5px;color:var(--muted)">'+esc(refStr(it))+'</div>'+note+'</td>'+
+      '<td class="rk">'+score(it)+'</td>'+
+      '<td><span class="badge b-'+it.risk+'">'+esc(t(it.risk))+'</span> <span class="badge b-urg">'+esc(t(it.urg+"s"))+'</span><div style="margin-top:4px;font-size:12.5px;color:var(--muted)">'+(st(it.id)==="gap"?esc(t("gap")):esc(t("todo")))+'</div></td>'+
+      '<td>'+esc(L(it.owner))+'</td><td><ul>'+acts+'</ul></td></tr>';
+  });
+  $("rep-out").innerHTML=h+'</tbody></table>';
+}
+function reportText(csv){
+  var rows=unresolved();
+  if(csv){
+    var q=function(s){return '"'+String(s).replace(/"/g,'""')+'"';};
+    var lines=[["Rank","ID","Domain","Score","Risk","Urgency","Status","Owner","Summary","Action items","Standards","Notes"].map(q).join(",")];
+    rows.forEach(function(it,i){
+      lines.push([i+1,it.id,domName(it.d),score(it),it.risk,it.urg,st(it.id),it.owner.en,it.tldr.en,it.a.en.join(" | "),refStr(it),(STATE[it.id]&&STATE[it.id].n)||""].map(q).join(","));
+    });
+    return lines.join("\n");
+  }
+  var out=[t("repH")+" — "+L(D.client),""];
+  rows.forEach(function(it,i){
+    out.push((i+1)+". ["+it.id+"] "+L(it.tldr));
+    out.push("   "+t("risk")+": "+t(it.risk)+" | "+t("urg")+": "+t(it.urg)+" | "+t("owner")+": "+L(it.owner));
+    (it.a[LANG]||it.a.en).forEach(function(a){ out.push("   - "+a); });
+    out.push("   "+refStr(it)); out.push("");
+  });
+  return out.join("\n");
+}
+function copyText(txt){
+  var done=function(){ $("copied").textContent=t("copied"); setTimeout(function(){$("copied").textContent="";},2200); };
+  try{ navigator.clipboard.writeText(txt).then(done,fallback); }catch(e){ fallback(); }
+  function fallback(){
+    var ta=document.createElement("textarea"); ta.value=txt; ta.style.position="fixed"; ta.style.opacity="0"; document.body.appendChild(ta); ta.select();
+    try{ document.execCommand("copy"); done(); }catch(e){} document.body.removeChild(ta);
+  }
+}
+
+/* ---------- about ---------- */
+function paintAbout(){
+  var ids=Object.keys(D.standards);
+  var rows=ids.map(function(k){ var s=D.standards[k];
+    var cnt=0; D.items.forEach(function(it){ it.refs.forEach(function(r){ if(r[0]===k) cnt++; }); });
+    return '<tr><td style="direction:ltr;text-align:start"><b>'+esc(s.name)+'</b></td><td>'+cnt+'</td><td style="direction:ltr;text-align:start">'+(s.url?'<a href="'+esc(s.url)+'" target="_blank" rel="noopener noreferrer">'+esc(s.url)+'</a>':'—')+'</td><td style="direction:ltr;text-align:start;font-size:13px">'+esc(s.note)+'</td></tr>';
+  }).join("");
+  var intro = LANG==="ar"
+    ? '<h2 style="margin:22px 0 6px;font-size:20px">حول القائمة</h2><p>تضم القائمة '+D.items.length+' بندًا في '+D.domains.length+' مجالات وظيفية، وكل بند يحتوي على: المجال، المعيار والضابط، سؤال التدقيق، الإجراءات المرتبطة، الخطورة، الاستعجال، والتبرير، إضافة إلى المسؤول المقترح. اضغط على أي معيار داخل البند لعرض شرح مختصر ورابط المصدر الرسمي.</p><p>ملاحظة: أرقام الضوابط وأسماء المعايير مكتوبة بالإنجليزية كما في المصادر الأصلية.</p>'
+    : '<h2 style="margin:22px 0 6px;font-size:20px">About this checklist</h2><p>'+D.items.length+' items across '+D.domains.length+' functional domains. Each item has a section, standard &amp; control, audit question, associated action items, risk, urgency and justification, plus a suggested responsible owner. Click any standard chip inside an item for a short explanation and the official source link.</p><p>Control numbers are cited in their original form; the explanations are short paraphrases for navigation, not quotations.</p>';
+  $("v-about").innerHTML=intro+'<table class="rep"><thead><tr><th>'+(LANG==="ar"?"المعيار":"Standard")+'</th><th>'+(LANG==="ar"?"عدد الإشارات":"Citations")+'</th><th>'+(LANG==="ar"?"المصدر الرسمي":"Official source")+'</th><th>'+(LANG==="ar"?"ملاحظة":"Note")+'</th></tr></thead><tbody>'+rows+'</tbody></table>';
+}
+
+/* ---------- modal & tooltip ---------- */
+function openRef(key){
+  var p=key.split(":"), it=itemById(p[0]), r=it.refs[+p[1]], s=D.standards[r[0]];
+  var link = s.url ? '<a href="'+esc(s.url)+'" target="_blank" rel="noopener noreferrer">'+esc(t("viewSrc"))+' ↗</a>' : '<div class="warn">'+esc(t("nolink"))+'</div>';
+  $("modal-in").innerHTML='<h3 id="m-title" style="direction:ltr;text-align:start">'+esc(s.name)+'</h3>'+
+    '<div class="ctl">'+esc(t("ctrl"))+': '+esc(r[1])+'</div>'+
+    '<div class="lbl" style="margin-top:6px">'+esc(t("reqLbl"))+'</div><div class="req">'+esc(r[2])+'</div>'+
+    '<div class="nt" style="direction:ltr;text-align:start">'+esc(s.note)+'</div>'+
+    '<div class="warn">'+esc(t("verify"))+'</div>'+
+    '<div style="margin-top:14px;display:flex;gap:10px;align-items:center;justify-content:space-between;flex-wrap:wrap">'+link+'<button class="btn" id="m-close">'+esc(t("close"))+'</button></div>';
+  $("modal").classList.add("open"); $("m-close").focus();
+}
+function closeModal(){ $("modal").classList.remove("open"); }
+var tip=$("tip");
+function showTip(el,x,y){
+  var p=el.getAttribute("data-ref").split(":"), r=itemById(p[0]).refs[+p[1]];
+  tip.textContent=r[2]; tip.style.display="block";
+  var w=tip.offsetWidth, h=tip.offsetHeight;
+  var left=Math.min(Math.max(8,x-w/2),window.innerWidth-w-8), top=y-h-12; if(top<8) top=y+22;
+  tip.style.left=left+"px"; tip.style.top=top+"px";
+}
+
+/* ---------- events ---------- */
+function switchView(v){
+  VIEW=v;
+  ["list","rep","about"].forEach(function(k){
+    $("v-"+k).classList.toggle("hide",k!==v);
+    $("tab-"+k).setAttribute("aria-selected",k===v);
+  });
+  if(v==="rep") paintReport(); if(v==="about") paintAbout();
+  window.scrollTo({top:0});
+}
+function renderAll(){ paintChrome(); paintProgress(); paintList(); if(VIEW==="rep") paintReport(); if(VIEW==="about") paintAbout(); }
+
+$("l-en").onclick=function(){ LANG="en"; persist(); renderAll(); };
+$("l-ar").onclick=function(){ LANG="ar"; persist(); renderAll(); };
+$("tab-list").onclick=function(){ switchView("list"); };
+$("tab-rep").onclick=function(){ switchView("rep"); };
+$("tab-about").onclick=function(){ switchView("about"); };
+["f-q","f-d","f-r","f-s","f-hide"].forEach(function(id){ $(id).addEventListener(id==="f-q"?"input":"change",paintList); });
+$("r-gaps").addEventListener("change",paintReport);
+$("b-copy").onclick=function(){ copyText(reportText(false)); };
+$("b-csv").onclick=function(){ copyText(reportText(true)); };
+
+document.addEventListener("click",function(e){
+  var chip=e.target.closest&&e.target.closest(".chip");
+  if(chip){ e.preventDefault(); e.stopPropagation(); tip.style.display="none"; openRef(chip.getAttribute("data-ref")); return; }
+  var b=e.target.closest&&e.target.closest("[data-set]");
+  if(b){
+    var p=b.getAttribute("data-set").split(":"), s=p[0], id=p[1];
+    STATE[id]=STATE[id]||{}; STATE[id].s=s; persist();
+    var keepOpen = !($("f-hide").checked && s==="ok");
+    OPEN[id]=keepOpen; paintProgress(); paintList(); return;
+  }
+  if(e.target===$("modal")) closeModal();
+  if(e.target.id==="m-close") closeModal();
+});
+document.addEventListener("keydown",function(e){ if(e.key==="Escape") closeModal(); });
+document.addEventListener("input",function(e){
+  var id=e.target.getAttribute&&e.target.getAttribute("data-note");
+  if(id){ STATE[id]=STATE[id]||{s:"todo"}; STATE[id].n=e.target.value; persist(); }
+});
+document.addEventListener("toggle",function(e){ var d=e.target; if(d.tagName==="DETAILS"&&d.dataset.id) OPEN[d.dataset.id]=d.open; },true);
+document.addEventListener("mouseover",function(e){ var c=e.target.closest&&e.target.closest(".chip"); if(c){ var r=c.getBoundingClientRect(); showTip(c,r.left+r.width/2,r.top); } });
+document.addEventListener("mouseout",function(e){ var c=e.target.closest&&e.target.closest(".chip"); if(c) tip.style.display="none"; });
+document.addEventListener("focusin",function(e){ var c=e.target.closest&&e.target.closest(".chip"); if(c){ var r=c.getBoundingClientRect(); showTip(c,r.left+r.width/2,r.top); } });
+document.addEventListener("focusout",function(){ tip.style.display="none"; });
+
+renderAll();
+// expose for tests
+window.__audit={D:D,STATE:STATE,unresolved:unresolved,reportText:reportText};
+})();
+</script>
+</body>
+</html>
